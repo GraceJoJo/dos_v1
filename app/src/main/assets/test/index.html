@@ -1,0 +1,141 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+</head>
+<body>
+<div id="body"></div>
+<div class="open" data-port="ttyS0" style="height:40px;width:100px;background:red;color:#fff;line-height:40px;text-align:center;float: left;margin-left: 5px;">连接ttyS0</div>
+<div class="open" data-port="ttyS1" style="height:40px;width:100px;background:red;color:#fff;line-height:40px;text-align:center;float: left;margin-left: 5px;">连接ttyS1</div>
+<div class="open" data-port="ttyS2" style="height:40px;width:100px;background:red;color:#fff;line-height:40px;text-align:center;float: left;margin-left: 5px;">连接ttyS2</div>
+<div class="open" data-port="ttyS3" style="height:40px;width:100px;background:red;color:#fff;line-height:40px;text-align:center;float: left;margin-left: 5px;">连接ttyS3</div>
+<div class="open" data-port="ttyGS0" style="height:40px;width:100px;background:red;color:#fff;line-height:40px;text-align:center;float: left;margin-left: 5px;">连接ttyGS0</div>
+<div class="open" data-port="ttyGS1" style="height:40px;width:100px;background:red;color:#fff;line-height:40px;text-align:center;float: left;margin-left: 5px;">连接ttyGS1</div>
+<div class="open" data-port="ttyGS2" style="height:40px;width:100px;background:red;color:#fff;line-height:40px;text-align:center;float: left;margin-left: 5px;">连接ttyGS2</div>
+<div class="open" data-port="ttyGS3" style="height:40px;width:100px;background:red;color:#fff;line-height:40px;text-align:center;float: left;margin-left: 5px;">连接ttyGS3</div>
+<div class="open" data-port="ttyUSB0" style="height:40px;width:100px;background:red;color:#fff;line-height:40px;text-align:center;float: left;margin-left: 5px;">连接ttyUSB0</div>
+<div class="open" data-port="ttyUSB1" style="height:40px;width:100px;background:red;color:#fff;line-height:40px;text-align:center;float: left;margin-left: 5px;">连接ttyUSB1</div>
+
+<div style="clear: both"></div>
+
+<div id="good1" style="height:40px;width:100px;background:red;color:#fff;line-height:40px;text-align:center;margin-top: 10px">1机 出货01</div>
+<div id="good2" style="height:40px;width:100px;background:red;color:#fff;line-height:40px;text-align:center;margin-top: 10px">1机 出货11</div>
+<div id="good3" style="height:40px;width:100px;background:red;color:#fff;line-height:40px;text-align:center;margin-top: 10px">1机 出货21</div>
+<div id="good4" style="height:40px;width:100px;background:red;color:#fff;line-height:40px;text-align:center;margin-top: 10px">2机 出货01</div>
+
+
+<div id="close" style="height:40px;width:100px;background:red;color:#fff;line-height:40px;text-align:center;margin-top: 10px">关闭APP</div>
+
+<div id="msg" style="height:100px;width:160px;line-height:100px;text-align:center;position: fixed;top: 50%;left: 50%;margin: -50px 0 0 -80px;color: #fff;background: #00a0e9;border-radius: 5px;z-index: 1001;display: none"></div>
+<div id="msg_bg" style="position: fixed;top:0;right: 0;bottom: 0;left: 0;background: rgba(0,0,0,0.5);z-index: 1000;display: none"></div>
+<script src="file:///android_asset/test/jquery.js"></script>
+<script>
+    Android.machine_open("ttyUSB0",2);
+
+
+    $('.open').on('click',function(){
+        var port = $(this).data("port");
+        Android.machine_open(port,2);
+    });
+
+
+
+    $('#good1').on('click',function(){
+        Android.machine_good(1,1);
+    });
+    $('#good2').on('click',function(){
+        Android.machine_good(1,11);
+    });
+    $('#good3').on('click',function(){
+        Android.machine_good(1,21);
+    });
+    $('#good4').on('click',function(){
+        Android.machine_good(2,1);
+    });
+
+
+
+    $('#close').on('click',function(){
+        Android.app_close();
+    });
+
+
+
+
+    $('#msg_bg').on('click',function(){
+        $('#msg').hide();
+        $('#msg_bg').hide();
+    });
+
+    function show_msg(type,str,code){
+        $('#msg').show();
+        $('#msg_bg').show();
+
+        switch (type){
+            case -3:  //初始化结束
+                $('#msg').html(str);
+                setTimeout(function () {
+                    $('#msg').hide();
+                    $('#msg_bg').hide();
+                    Android.test_all_channel(1); //全货道检测
+
+                },2000);
+                break;
+            case -2:
+                $('#msg').html(str);
+                break;
+            case -1:
+                $('#msg').html("<font style='color: red'>主板连接失败</font>");
+                break;
+            case 0:
+                $('#msg').html("主板连接成功");
+                break;
+            case 1:
+                $('#msg').html("正在出货,货道："+str);
+                break;
+            case 2:
+                switch (code){
+                    case 1:
+                        $('#msg').html("出货异常:"+str); // code为1 主板没初始化成功
+                        break;
+                }
+                break;
+            case 3:
+                switch (code){
+                    case 0:
+                        $('#msg').html(str); // code为0 暂时不能出货  要处理延迟出货！
+                        break;
+                    case 1:
+                        $('#msg').html(str); // code为1 可以出货
+                        Android.machine_good(1,1);
+                        break;
+                }
+                break;
+            case 4:
+                $('#msg').html("请取走您的货品");
+                setTimeout(function () {
+                    $('#msg').hide();
+                    $('#msg_bg').hide();
+                    //Android.machine_good(2,1);
+                },3000);
+                break;
+            case 5:
+                $('#msg').html(msg);
+                setTimeout(function () {
+                    $('#msg').hide();
+                    $('#msg_bg').hide();
+                },1000);
+                break;
+            case 6:
+                $('#msg').html(msg);  //端口关闭
+                setTimeout(function () {
+                    $('#msg').hide();
+                    $('#msg_bg').hide();
+                },1000);
+                break;
+        }
+    }
+</script>
+</body>
+</html>

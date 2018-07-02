@@ -1,0 +1,2368 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dos自动售卖v1.0</title>
+    <link href="./amazeui/css/amazeui.min.css" rel="stylesheet" type="text/css"/>
+    <link href="http://at.alicdn.com/t/font_1kfyrwdt8i0vbo6r.css" rel="stylesheet" type="text/css"/>
+    <style>
+        body, html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-size: 1em;
+        }
+
+        .fl {
+            float: left
+        }
+
+        .fr {
+            float: right
+        }
+
+        .cf {
+            clear: both
+        }
+
+        .signal_active {
+            color: lightseagreen;
+        }
+
+        .signal_error {
+            color: lightcoral;
+        }
+
+        .btn_back {
+            height: 80px;
+            padding: 0 20px;
+            border: 1px solid lightseagreen;
+            border-radius: 10px;
+            line-height: 80px;
+            text-align: center;
+            display: inline-block;
+            font-size: 0.8em;
+            color: lightseagreen;
+        }
+
+        .btn_yaopin {
+            height: 80px;
+            padding: 0 20px;
+            border: 1px solid lightseagreen;
+            border-radius: 10px;
+            line-height: 80px;
+            text-align: center;
+            display: inline-block;
+            font-size: 0.8em;
+            color: lightseagreen;
+        }
+
+        #header {
+            position: fixed;
+            width: 100%;
+            height: 100px;
+            left: 0;
+            right: 0;
+            top: 0;
+            background: #fff;
+            border-bottom: 1px solid #fff;
+            color: #333;
+            padding: 0 20px;
+        }
+
+        #header .header_info {
+            height: 100px;
+            line-height: 100px;
+            font-size: 2.5em;
+        }
+
+        #yaopin_box {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            bottom: 150px;
+            top: 100px;
+            background-size: 100%;
+            color: #fff;
+            z-index: 30;
+            background-color: rgba(255, 255, 255, 1);
+            border-bottom: 1px solid #b2e2fa;
+            overflow:scroll;
+        }
+
+        #check_temp_box {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            bottom: 150px;
+            top: 100px;
+            background-size: 100%;
+            color: #fff;
+            z-index: 30;
+            background-color: rgba(0, 0, 0, 0.9);
+            border-bottom: 1px solid #b2e2fa;
+        }
+
+        #player {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            bottom: 0px;
+            top: 100px;
+            background-size: 100%;
+            color: #fff;
+            z-index: 1000;
+            background-color: #000;
+        }
+
+        #my_ad_pic {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            bottom: 0px;
+            top: 100px;
+            background-size: 100%;
+            color: #fff;
+            z-index: 30;
+            background-color: #000;
+            overflow: hidden;
+        }
+
+        #mall {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            bottom: 150px;
+            top: 101px;
+            background: url("./images/mall_bg.jpg");
+            background-size: 100%;
+            color: #fff;
+            padding: 20px;
+            z-index: 10;
+            overflow-y: scroll;
+        }
+
+        #mall li {
+            width: 50%;
+            float: left;
+            list-style: none;
+            padding: 5px;
+        }
+
+        .cate_one {
+            height: 180px;
+            background: rgba(255, 255, 255, 0.6);
+            color: #fff;
+            text-align: center;
+            line-height: 180px;
+            border-radius: 4px;
+            font-size: 3em;
+        }
+
+        .goods_one {
+            background: rgba(255, 255, 255, 0.6);
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 2em;
+            overflow: hidden;
+            padding: 15px 0 10px 0;
+        }
+
+        .goods_one_pic {
+            text-align: center;
+        }
+
+        .goods_one_pic img {
+            max-width: 100%;
+        }
+
+        #show_goods {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            bottom: 150px;
+            top: 101px;
+            background: url("./images/mall_bg.jpg");
+            background-size: 100%;
+            color: #fff;
+            padding: 20px;
+            z-index: 11;
+            display: none;
+        }
+
+        #main_nav {
+            position: fixed;
+            height: 150px;
+            width: 100%;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: black;
+            color: #fff;
+            border-top: 2px solid lightseagreen;
+            z-index: 11;
+        }
+
+        .main_nav_one {
+            height: 150px;
+            width: 25%;
+            text-align: center;
+            line-height: 150px;
+            float: left;
+            margin: 0;
+            font-size: 2em;
+        }
+
+        #manager {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 101px;
+            background: url("./images/mall_bg.jpg");
+            background-size: 100%;
+            color: #fff;
+            padding: 20px;
+            z-index: 10;
+            color: #fff;
+            font-size: 1.8em;
+        }
+
+        .action_super {
+            display: none;
+        }
+
+        #manager .action_box {
+            width: 200px;
+            height: 200px;
+            line-height: 200px;
+            border-radius: 20px;
+            text-align: center;
+            background-color: rgba(255, 37, 62, 0.6);
+            float: left;
+            margin: 0 20px 20px 0;
+            color: #fff;
+            z-index: 888;
+        }
+
+        .btn_close {
+            position: fixed;
+            left: 10%;
+            right: 10%;
+            bottom: 10%;
+            height: 120px;
+            line-height: 120px;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            color: lightseagreen;
+        }
+
+        .admin_pass_btn, .user_pass_btn {
+            width: 100px;
+            height: 100px;
+            line-height: 100px;
+            border: 1px solid #eff0f1;
+            text-align: center;
+            float: left;
+            margin: 10px;
+            font-size: 22px;
+        }
+
+        #show_debug_channel {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 101px;
+            background: #000000;
+            background-size: 100%;
+            color: #fff;
+            padding: 20px;
+            z-index: 10;
+            color: #fff;
+            font-size: 1.8em;
+        }
+
+        .one_channel_btn {
+            display: inline-block;
+            background-color: #fff;
+            color: #666;
+
+            width: 9.5%;
+            text-align: center;
+            margin: 0 0.4% 5px 0;
+            height: 100px;
+            line-height: 100px;
+        }
+
+        .one_machine_btn {
+            height: 60px;
+            width: 100px;
+            margin-right: 10px;
+            background-color: lightseagreen;
+            color: #fff;
+            line-height: 60px;
+            text-align: center
+        }
+
+        .one_machine_btn_active {
+            background-color: lightcoral !important;
+        }
+        
+        #index2{
+        	width: 100%;
+        	height: 100%;
+        	background-color: #000;
+        	position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 101px;
+            z-index: 500;
+        }
+        
+        #index2_btn_area{
+        	width: 100%;
+        	background: url("./images/mall_bg.jpg");
+            background-size: 100%;
+            padding: 1%;
+        }
+        
+        #index2_tips_area{
+        	padding: 5%;
+        	padding-top: 150px !important;
+        	color: rgb(64,171,162);
+        	font-size: 50px;
+        }
+        
+        .index2_btn{
+        	width: 45%;
+        	background: rgba(255,255,255,0.7);
+        	float: left;
+        	border-radius: 15px;
+        	font-weight: bold;
+        	text-align: center;
+        	font-size: 50px;
+        	color: #fff;
+        	margin: 2.5%;
+        }
+        
+        .index2_btn .iconfont{
+        	color: rgb(64,171,162);
+        	background-color: #fff;
+        	font-size: 150px;
+        	width: 65%;
+        	border-radius: 50%;
+        	margin: 5% auto;
+        }
+    </style>
+</head>
+<body>
+<div id="header">
+    <ul class="am-avg-sm-3">
+        <li style="width: 25% !important;">
+            <div class="header_info" style="text-align: left">
+                <div class="btn_back" style="margin-top: 10px;display: none">返回上级</div>
+            </div>
+        </li>
+        <li style="width: 50% !important;">
+            <div class="header_info" style="text-align: center">四川科伦智慧药房系统</div>
+        </li>
+        <li style="width: 25% !important;">
+            <div id="admin" class="header_info" style="text-align: right">
+                <span id="temperature" style="font-size:0.6em"></span>
+                <span id="signal" class="iconfont" style="font-size: 1.5em">&#xe66b;</span>
+            </div>
+        </li>
+    </ul>
+</div>
+
+
+<div id="player" style="display: none">
+    <video id="my_video" width="100%" height="100%" autoplay="autoplay" poster="./images/player2.png"></video>
+    <div id="my_ad_pic" style="display: none;">
+        <img src="" width="100%" height="100%" style="margin: auto 0">
+    </div>
+</div>
+
+<div id="index2" style="display: none;">
+	<div id="index2_btn_area">
+		<div>
+			<div id="go_buy2" class="index2_btn">
+				<div class="iconfont">&#xe647;</div>
+				<div>立即购药</div>
+			</div>
+			<div id="open_app2" class="index2_btn">
+				<div class="iconfont">&#xe657;</div>
+				<div>咨询医生</div>
+			</div>
+		</div>
+		<div>
+			<div id="check_temp2" class="index2_btn">
+				<div class="iconfont">&#xe60b;</div>
+				<div>测体温</div>
+			</div>
+			<div id="btn_yaopin2" class="index2_btn">
+				<div class="iconfont">&#xe62a;</div>
+				<div>药品公众查询</div>
+			</div>
+		</div>				
+	</div>
+	<div id="index2_tips_area">　　四川科伦智慧药房系统是集自助购药、远程问诊、电子处方、人体参数测量、药品公众查询于一体，由绵阳市食品药品监督管理局监制的新型智慧药房系统，如需服务请点击屏幕上方服务窗口。</div>
+</div>
+
+<div id="show_tips" style="display: none">
+    <div style="position: fixed;height: 400px;width: 600px;line-height: 400px;text-align:center;top: 50%;left: 50%;margin: -200px 0 0 -300px;z-index: 9999;background-color: lightseagreen;color: #fff;border-radius: 10px;">
+        <div id="show_tips_str" style="font-size: 3.5em"></div>
+    </div>
+    <div style="position: fixed;top: 101px;left: 0;right:0;bottom:150px;background-color: rgba(0,0,0,0.7);z-index: 14"></div>
+</div>
+
+<div id="yaopin_box" style="display: none">
+    <div style="padding: 30px 30px 0 30px;">
+        <div class="yaopin_type" data-type="gcyp" style="float: left;width: 15%;height: 100px;background-color: lightseagreen;color: #fff;border-radius: 5px;text-align: center;line-height: 100px;font-size: 1.8em">
+            国药
+        </div>
+        <div class="yaopin_type" data-type="jkyp" style="float: left;margin-left: 20px;width: 15%;height: 100px;background-color: lightgray;color: #fff;border-radius: 5px;text-align: center;line-height: 100px;font-size: 1.8em">
+            进口药
+        </div>
+        <div style="float: left;margin-left: 20px;width: 40%">
+            <input id="yaopin_title" type="text" placeholder="请输入药品名称" style="text-align:center;width:100%;height: 100px;line-height: 100px;padding: 0 20px;font-size: 1.8em;color: lightseagreen;">
+        </div>
+        <div style="float: right;margin-left: 20px;width: 20%">
+            <div id="yaopin_start" style="height: 100px;line-height: 100px;text-align: center;background-color: black;color: #fff;border-radius: 10px;font-size: 1.8em;">开始查询</div>
+        </div>
+        <div style="clear: both"></div>
+    </div>
+    <div style="margin-top:20px;padding: 10px 30px;color: #0c9c6e;font-size: 1.6em">
+        <style>
+            #yaopin_list_table {width: 100%}
+            #yaopin_list_table td{height: 30px;line-height: 30px;padding: 20px 0}
+        </style>
+        <table id="yaopin_list_table" border=1 bordercolor=#666666 style="border-collapse:collapse">
+
+        </table>
+    </div>
+</div>
+
+<div id="check_temp_box" style="display: none">
+    <div id="show_temp_num" style="margin: 180px auto 30px auto;text-align: center"></div>
+    <div style="text-align: center;font-size: 2em">请用额头覆盖体温传感器</div>
+    <div style="text-align: center;font-size: 1.5em;width: 640px;margin: 30px auto 0 auto">
+        <div style="display: inline-block;height: 80px;width: 160px;line-height: 80px;background-color: #515151;float: left">
+            读取异常
+        </div>
+        <div style="display: inline-block;height: 80px;width: 160px;line-height: 80px;background-color: #30e60d;float: left">
+            正常体温
+        </div>
+        <div style="display: inline-block;height: 80px;width: 160px;line-height: 80px;background-color: #dd730b;float: left">
+            发烧
+        </div>
+        <div style="display: inline-block;height: 80px;width: 160px;line-height: 80px;background-color: #e91c1c;float: left">
+            高烧
+        </div>
+    </div>
+    <div class="cf"></div>
+    <div id="start_check_temp"
+         style="width: 500px;height: 150px;line-height: 150px;font-size: 2em;margin: 80px auto;text-align: center;background-color: lightseagreen;color: #fff;border-radius: 5px;">
+        点击开始检测
+    </div>
+    <audio id="countdown_wav" src="./images/10s.wav"></audio>
+</div>
+
+
+<div id="mall">
+    <div id="cate_list"></div>
+    <div id="goods_list"></div>
+    <div id="show_goods">
+        <div id="show_goods_loading" style="display: none">
+            <div style="position: fixed;height: 400px;width: 400px;top: 50%;left: 50%;margin: -200px 0 0 -200px;z-index: 15">
+                <img src="./images/loading_1.gif" width="400" height="400" style="border-radius: 200px;">
+            </div>
+            <div style="position: fixed;top: 101px;left: 0;right:0;bottom:150px;background-color: rgba(0,0,0,0.7);z-index: 14"></div>
+        </div>
+
+        <div style="margin: 20px 0;text-align: center;position: relative;">
+            <img id="show_goods_pic" src="" width="500" height="500">
+            <img id="rx_full_img" src="images/rx_type_full.png" style="width: 100px;height: 100px;position: absolute;bottom: 0px;margin-left: 10px;opacity: 0;">
+        </div>
+        <div id="show_goods_title" style="text-align: center;font-size: 2.5em;line-height: 80px;"></div>
+        <div id="show_goods_spec" style="text-align: center;font-size: 1.5em;line-height: 40px;"></div>
+        <div id="show_goods_price" style="text-align: center;font-size: 2em;line-height: 50px;"></div>
+        <div style="text-align: center;font-size: 2em;line-height: 50px;">付款后将从【<span id="show_goods_channel"></span>】出货
+        </div>
+        <div id="show_goods_desc" style="font-size: 1.5em;padding: 0 50px;"></div>
+
+        <div id="pay_type_box" style="text-align: center;background-color: rgba(255,255,255,1);position: fixed;bottom: 150px;left: 0;right: 0;height: 450px;padding: 30px 0;display: none;">
+            <div class="fl" style="width: 33%;">
+                <div id="qr_wechat"></div>
+                <div style="">
+                    <img src="./images/wechat_logo_v2.png" height="100px">
+                </div>
+            </div>
+            <div class="fl" style="width: 33%;">
+                <div id="qr_alipay"></div>
+                <div>
+                    <img src="./images/alipay_logo_v2.png" height="100px">
+                </div>
+            </div>
+            <div class="fl" style="width: 33%;">
+                <div id="cash_pay">
+                    <img src="./images/pay_money.png" height="400px">
+                </div>
+            </div>
+            <div class="cf"></div>
+        </div>
+        <div id="goods_examine_box" style="text-align: center;background-color: rgba(255,255,255,1);position: fixed;bottom: 150px;left: 0;right: 0;height: 450px;line-height:450px;display: none;">
+        	<div id="wait_examine_box" style="font-size: 35px;color: rgb(35,178,170);display: none;"><span class="iconfont" style="font-size: 50px;">&#xe6d7;</span>等待审核...</div>
+        	<div id="examine_success_box" style="font-size: 35px;color: rgb(35,178,170);display: none;"><span class="iconfont" style="font-size: 50px;">&#xe6d5;</span>审核成功</div>
+        	<div id="examine_fail_box" style="font-size: 35px;color: rgb(35,178,170);display: none;">
+        		<div style="line-height: 40px;margin-top: 205px;"><span class="iconfont" style="font-size: 50px;">&#xe6d6;</span>审核失败</div>
+        		<div id="fail_reson" style="font-size: 20px;color: red;line-height: 40px;"></div>
+        	</div>
+        	<div id="sure_examine_box">
+        		<div id="sure_examine_btn" style="background: rgb(35,178,170);border-radius: 15px;width: 500px;height: 200px;text-align: center;color: #fff;font-size: 80px;font-weight: bold;line-height: 200px;margin: 50px auto;">
+        			立即购药
+        		</div>
+        		<div style="font-size: 20px;color: red;line-height: 40px;">提示：此药品需凭处方购买，请点击“咨询医生”获取处方。</div>
+        	</div>
+        </div>
+        <div id="show_cash_pay" style="position: fixed;top:0;left:0;right:0px;bottom:0px;z-index: 1000;display:none;width:100%;background: rgba(0,0,0,0.8);">
+            <div style="background: #ffffff;color:#333;font-size: 14px;width: 400px;height: 244px;left: 50%;margin-left: -200px;bottom: 50%;margin-bottom:-100px;position: fixed;border-radius: 5px;">
+                <div style="text-align:center;font-size: 22px;line-height: 60px;height: 60px;">现金支付</div>
+                <div style="font-size: 14px;color: #666666;line-height: 25px;height: 25px;margin-bottom: 5px;text-align:center">
+                    请投入：1元硬币；1元、5元、10元、20元纸币
+                </div>
+                <div style="text-align: left;font-size: 18px;padding-left: 132px;margin-bottom: 10px;">
+                    应付金额：<span class="cash_need_pay">0</span> 元
+                    <br>
+                    实付金额：<span class="cash_payed">0</span> 元
+                    <br>
+                    应退金额：<span class="cash_need_return">0</span>元
+                </div>
+                <div id="close_cash_pay" style="height: 60px;background: #0c9c6e;color: #fff;text-align: center;border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;">
+                    <div style="font-size: 16px;line-height: 40px">放弃使用现金交易</div>
+                    <div style="font-size: 10px;line-height: 10px;">注意:放弃后已付现金不退回!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="cash_show" style="display:none;position: fixed;bottom: 180px;width: 180px;height: 50px;line-height: 50px;left: 50%;margin-left: -90px;background: lightseagreen;color: #fff;text-align: center"></div>
+</div>
+<div id="main_nav">
+    <div style="position: absolute;top: -1px;left:50%;margin-left:-80px;height: 24px;width: 160px;text-align: center;line-height: 24px;background-color: lightseagreen;color: #fff;">
+        请选择功能
+    </div>
+    <div id="go_buy" class="main_nav_one" style="color: lightseagreen">
+        <span class="iconfont" style="font-size: 1.5em;">&#xe604;</span>
+        <span>立即购药</span>
+    </div>
+    <div id="check_temp" class="main_nav_one" style="color: red">
+        <span class="iconfont" style="font-size: 1.5em;">&#xe60b;</span>
+        <span>测体温</span>
+    </div>
+    <div id="btn_yaopin" class="main_nav_one" style="color: lightgreen">
+        <span class="iconfont" style="font-size: 1.5em;">&#xe6e1;</span>
+        <span>药品查询</span>
+    </div>
+    <div id="open_app" class="main_nav_one" style="color: lightsalmon">
+        <span class="iconfont" style="font-size: 1.5em;">&#xe657;</span>
+        <span>咨询医生</span>
+    </div>
+</div>
+
+
+<div id="admin_login"
+     style="position: fixed;top: 0;left: 0;right: 0;bottom: 0;background-color: rgba(0,0,0,0.9);display: none;z-index: 888">
+    <div id="admin_login_box"
+         style="position:absolute;top:50%;left:50%;margin:-280px 0 0 -250px;color:#333;width: 500px;height: 500px;background-color: #fff;border-radius: 5px; ">
+        <div style="height: 60px;line-height: 60px;text-align: center;font-size: 18px;">
+            系统管理
+        </div>
+        <div style="padding:10px 30px;">
+            <input id="admin_password" type="password"
+                   style="height: 50px;line-height: 50px;border: none;background-color: #eff0f1;text-align: center;width: 100%;font-size: 30px;">
+        </div>
+        <div style="margin: 0 0 0 10px">
+            <div class="admin_pass_btn" data-num="1">1</div>
+            <div class="admin_pass_btn" data-num="2">2</div>
+            <div class="admin_pass_btn" data-num="3">3</div>
+            <div class="admin_pass_btn" data-num="4">4</div>
+            <div class="admin_pass_btn" data-num="5">5</div>
+            <div class="admin_pass_btn" data-num="6">6</div>
+            <div class="admin_pass_btn" data-num="7">7</div>
+            <div class="admin_pass_btn" data-num="8">8</div>
+            <div class="admin_pass_btn" data-num="9">9</div>
+            <div class="admin_pass_btn" data-num="0">0</div>
+            <div id="admin_pass_delete" class="admin_pass_btn">删除</div>
+            <div id="admin_pass_sure" class="admin_pass_btn">确认</div>
+        </div>
+    </div>
+    <div id="admin_login_close"
+         style="position:absolute;top:50%;left:50%;margin:270px 0 0 -50px;text-align: center;line-height:100px;color:#fff;width: 100px;height: 100px;background-color: lightseagreen;border-radius: 50px; ">
+        关闭
+    </div>
+</div>
+
+<div id="manager" style="display: none">
+    <div id="user_config_change_goods" class="action_box">补换货</div>
+    <div id="restart_app" class="action_box">重启应用</div>
+    <div id="error_is_ok" class="action_box">恢复异常</div>
+    <div id="open_supper" class="action_box">超级管理</div>
+
+    <div id="go_back_manager" class="action_box action_super">返回</div>
+    <div id="test_channel" class="action_box action_super">货道测试</div>
+    <div id="set_token" class="action_box action_super">通讯设置</div>
+    <div id="set_tiwen" class="action_box action_super">体温补偿</div>
+    <div id="close_app" class="action_box action_super">关闭应用</div>
+
+
+    <div id="set_machine_box"
+         style="display:none;position: fixed;height: 520px;width: 400px;top:50%;left: 50%;margin: -260px 0 0 -200px;background-color: #fff;border-radius: 10px;padding: 20px;">
+        <div style="height: 50px;line-height: 50px;text-align: center;color: #333">
+            通讯设置
+        </div>
+        <div style="margin: 20px 0;">
+            <input id="set_machine_code" placeholder="机器编码" type="text"
+                   style="color:#333;height: 50px;line-height: 50px;border: none;background-color: #eff0f1;text-align: center;width: 100%;font-size: 30px;">
+        </div>
+        <div style="margin: 20px 0;">
+            <input id="set_machine_token" placeholder="通讯token" type="text"
+                   style="color:#333;height: 50px;line-height: 50px;border: none;background-color: #eff0f1;text-align: center;width: 100%;font-size: 30px;">
+        </div>
+        <div style="margin: 20px 0;">
+            <select id="set_machine_num" style="color:#333;height: 50px;line-height: 50px;border: none;background-color: #eff0f1;text-align: center;width: 100%;font-size: 30px;">
+                <option value="1">1个柜</option>
+                <option value="2">2个柜</option>
+                <option value="3">3个柜</option>
+                <option value="4">4个柜</option>
+            </select>
+        </div>
+
+        <div id="set_machine_ok"
+             style="height: 80px;line-height: 80px;text-align: center;border-radius: 10px;background-color: lightseagreen;color: #fff;">
+            确认保存
+        </div>
+        <div id="set_machine_cancel"
+             style="margin-top:30px;height: 80px;line-height: 80px;text-align: center;border-radius: 10px;background-color: lightcoral;color: #fff;">
+            取消操作
+        </div>
+    </div>
+
+    <div id="set_tiwen_box"
+         style="display:none;position: fixed;height: 380px;width: 400px;top:50%;left: 50%;margin: -190px 0 0 -200px;background-color: #fff;border-radius: 10px;padding: 20px;">
+        <div style="height: 50px;line-height: 50px;text-align: center;color: #333">
+            体温补偿设置
+        </div>
+        <div style="margin: 20px 0;">
+            <input id="set_tiwen_plus" placeholder="请设置数值" type="number"
+                   style="color:#333;height: 50px;line-height: 50px;border: none;background-color: #eff0f1;text-align: center;width: 100%;font-size: 30px;">
+        </div>
+        <div id="set_tiwen_ok"
+             style="height: 80px;line-height: 80px;text-align: center;border-radius: 10px;background-color: lightseagreen;color: #fff;">
+            确认保存
+        </div>
+        <div onclick="$('#set_tiwen_box').hide();" style="margin-top:30px;height: 80px;line-height: 80px;text-align: center;border-radius: 10px;background-color: lightcoral;color: #fff;">
+            取消操作
+        </div>
+    </div>
+
+
+    <div id="user_config_fixed_box"
+         style="display:none;position:absolute;top:50%;left:50%;margin:-120px 0 0 -250px;padding: 20px;color:#333;width: 500px;height: 240px;background-color: #fff;border-radius: 5px; ">
+        <div style="text-align: center;height: 120px;line-height: 120px;font-size: 0.6em">
+            确认机器故障已经完成排除，可以正常销售？
+        </div>
+        <div style="text-align: center">
+            <span id="user_config_fixed_sure"
+                  style="padding: 20px 50px;background-color: #0c9c6e;color: #fff;margin-right: 40px;border-radius: 3px;">确认</span>
+            <span style="padding: 20px 50px;background-color: #efefef;border-radius: 3px;"
+                  onclick="$('#user_config_fixed_box').hide();">取消</span>
+        </div>
+    </div>
+
+    <div id="user_config_change_goods_box"
+         style="display:none;position:fixed;top:101px;bottom:0;left:0;right:0;padding: 20px;color:#333;background-color: #999;z-index: 2000">
+        <div style="height: 100%;overflow-y: scroll;">
+            <table id="user_config_change_goods_list" style="width: 100%"></table>
+        </div>
+        <div style="position:fixed;bottom:220px;left:10%;right:10%;z-index: 99999">
+            <div id="user_config_change_goods_close"
+                 style="background-color: rgba(255,255,255,0.8);color: lightseagreen;width:100%;height: 80px;line-height: 80px;text-align: center;border-radius: 10px;">
+                关闭补换货界面
+            </div>
+        </div>
+        <style>
+            #user_config_change_goods_box td {
+                width: 25%;
+                text-align: center;
+                height: 80px;
+                line-height: 80px;
+                margin: 10px 0;
+            }
+        </style>
+
+
+        <div id="user_config_change_goods_sure_box"
+             style="display:none;position:fixed;top:101px;left:10px;bottom: 10px;right:10px;padding: 20px;color:#333;background-color: #fff;border-radius: 5px; ">
+            <div style="height: 450px;overflow-y: scroll;">
+                <table id="user_config_change_goods_sure_list"
+                       style="width: 100%;height: 100%;overflow-y: scroll"></table>
+            </div>
+            <div id="user_config_change_goods_sure_btn"
+                 style="margin-top: 10px;background-color: #0c9c6e;color: #fff;height: 80px;line-height: 80px;text-align: center;">
+                确认补货已完成
+            </div>
+            <div id="user_config_change_goods_sure_close"
+                 style="margin-top: 10px;background-color: #5a5a58;color: #fff;height: 80px;line-height: 80px;text-align: center;">
+                关闭
+            </div>
+            <style>
+                #user_config_change_goods_sure_box td {
+                    width: 10%;
+                    text-align: center;
+                    height: 55px;
+                    line-height: 55px;
+                    font-size: 10px;
+                }
+            </style>
+        </div>
+
+        <div id="user_config_change_goods_comfirm_box"
+             style="display:none;position:absolute;top:50%;left:50%;margin:-120px 0 0 -250px;padding: 20px;color:#333;width: 500px;height: 240px;background-color: #fff;border-radius: 5px;">
+            <input type="hidden" id="apply_order_id" value="0">
+            <div style="text-align: center;height: 150px;line-height: 150px;color: red">
+                确认该次补&换货已经全部完成？
+            </div>
+            <div style="text-align: center">
+                <span id="user_config_change_goods_comfirm_sure"
+                      style="padding: 20px 50px;background-color: #0c9c6e;color: #fff;margin-right: 40px;border-radius: 3px;">确认</span>
+                <span style="padding: 20px 50px;background-color: #efefef;border-radius: 3px;"
+                      onclick="$('#user_config_change_goods_comfirm_box').hide();">取消</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="close_manager" class="btn_close">关闭界面</div>
+</div>
+
+<div id="show_debug_channel" style="display: none">
+
+    <div style="margin:0 0 20px 0">
+        <div data-machine_id="1" class="fl one_machine_btn one_machine_btn_active">1柜</div>
+        <div data-machine_id="2" class="fl one_machine_btn">2柜</div>
+        <div data-machine_id="3" class="fl one_machine_btn">3柜</div>
+        <div data-machine_id="4" class="fl one_machine_btn">4柜</div>
+        <div class="cf"></div>
+    </div>
+
+    <div id="debug_all_channel"
+         style="height: 80px;line-height: 80px;text-align: center;background-color: #fff;border-radius: 10px;color: #333">
+        全货道检测
+    </div>
+
+    <div style="height: 50px;line-height: 50px;text-align: center;font-size: 0.8em">↓单货道检测，点击货道测试↓</div>
+
+    <div id="debug_channel_list" style="margin-top: 20px;height: 100%;overflow-y: scroll;padding-bottom: 800px;"></div>
+    <div class="btn_close" onclick="show_take_godds = 1;is_debug_channel=false;$('#show_debug_channel').hide();">关闭货道检测</div>
+</div>
+
+<div id="machine_msg"
+     style="font-size: 3.5em;height: 400px;width: 600px;line-height: 400px;text-align:center;position: fixed;top: 50%;left: 50%;margin: -200px 0 0 -300px;color: #fff;background: lightseagreen;border-radius: 5px;z-index: 10000;display: none;border-radius: 10px;"></div>
+<div id="machine_msg_bg"
+     style="position: fixed;top:0;right: 0;bottom: 0;left: 0;background: rgba(0,0,0,0.5);z-index: 10000;display: none"></div>
+
+<script src="./js/jquery.js"></script>
+<script src="./qrcode/jquery.qrcode.js"></script>
+<script src="./qrcode/qrcode.js"></script>
+<script src="./check_temp/js/radialIndicator.js"></script>
+<script>
+
+    var API_URL = "http://auto.taiyijie.com/machine/api/index/";
+    /**edit by lengjianghua **/
+    var CASH_PAY_NOTIFY_URL = "http://auto.taiyijie.com/machine/payment/cash_notify/";
+    var need_notice=false;//是否要检测现金交易
+    var cash_notice_num = 0;
+    /**end of edit**/
+    var IMAGE_DOMAIN = "http://auto-yin.oss-cn-shenzhen.aliyuncs.com/";
+    var machine_code = window.localStorage.getItem("machine_code");
+    var machine_token = window.localStorage.getItem("machine_token");
+    var machine_num = window.localStorage.getItem("machine_num");
+    //var machine_num = 1;
+    machine_num = (machine_num>0)?machine_num:1;
+
+
+    var goods_cate; //产品类别数据
+    var goods_list; //产品数据
+    var ad_list; //要播放的广告列表
+    var ad_list_temp = []; //当前在播放的临时广告列表
+    var ad_list_down; //广告下载列表
+    var now_cate_pid = 0;
+    var up_cate_pid = 0;
+    var time_heart = 30 * 1000;
+    var time_goods = 300 * 1000; //300秒同步一次产品
+    var time_ad = 300 * 1000; //80秒同步一次广告
+    var no_action_time_limit = 600; //600秒无操作开始播放广告
+　  var no_action_time_index2 = 300; //300秒无操作显示首页
+//  var no_action_time_limit = 10; //10秒无操作开始播放广告
+//  var no_action_time_index2 = 5; //5秒无操作显示首页
+    var timer_check_pay; //检测支付状态timer
+    var show_take_godds =1; //显示请取走货品提示
+    var tiwen_plus = window.localStorage.getItem("tiwen_plus")?window.localStorage.getItem("tiwen_plus"):0;
+
+    var now_pay_order_no = 0; //当前正在支付的订单号
+    var now_pay_order_channelId = 0; //当前正在支付的订单的出货货道编号
+    var is_debug_channel = false;  //是否在调试货道
+    var timer_temperature;
+    var timer_goods;
+    var timer_heart;
+    var timer_ad;
+    var is_playing = false; //是否在播放
+    var now_play_num = 0; //当前播放的index
+    var videoPlayTimer; //视频播放计时器
+    var timer1;
+
+//  apiready = function () {
+        try{
+            Android.machine_open("ttyUSB0", machine_num*1); //启动货柜控制板
+        }catch (e){}
+        try{
+            setTimeout(function () {
+                Android.cash_start("ttyS2"); //启动现金收银监听
+            },8000);
+        }catch (e){}
+//      try{
+//          //读取温湿度
+//          timer_temperature = setInterval(function () {
+//              var temp = Android.get_temperature();
+//              $('#temperature').html(temp);
+//          }, 1000);
+//      }catch (e){}
+
+        try{
+            get_online_heart();
+            get_goods();
+            get_ad_list();
+
+            timer_goods = setInterval(function () {
+                get_goods();
+            }, time_goods);
+            timer_heart = setInterval(function () {
+                get_online_heart();
+            }, time_heart);
+            timer_ad = setInterval(function () {
+                get_ad_list();
+            }, time_ad);
+        }catch (e){}
+//  };
+	
+	init_index2();
+    function init_index2(){
+    	var index2_btn_area_width = $(document).width();
+		$("#index2_btn_area").height(index2_btn_area_width);
+		$(".index2_btn").height(index2_btn_area_width*0.44);
+		$(".index2_btn .iconfont").height(index2_btn_area_width*0.44*0.65).css('line-height',index2_btn_area_width*0.44*0.65+"px");
+	}
+
+    var now_goods_machine = 0;
+    var now_goods_channel = 0;
+    function machine_msg(type, str, code) {
+        $('#machine_msg').show();
+        $('#machine_msg_bg').show();
+        $('#show_tips').hide();
+
+        switch (type) {
+            case -3:  //初始化结束
+                $('#machine_msg').html(str);
+                setTimeout(function () {
+                    $('#machine_msg').hide();
+                    $('#machine_msg_bg').hide();
+                }, 2000);
+                break;
+            case -2:
+                $('#machine_msg').html(str);
+                break;
+            case -1:
+                $('#machine_msg').html("<font style='color: red'>主板连接失败</font>");
+                break;
+            case 0:
+                $('#machine_msg').html("主板连接成功");
+                break;
+            case 1:
+                $('#machine_msg').html("正在出货,货道：" + str);
+                break;
+            case 2:
+                switch (code) {
+                    case 1:
+                        $('#machine_msg').html("出货异常:" + str); // code为1 主板没初始化成功
+                        break;
+                    case 2:
+                        $('#machine_msg').html("出货异常:" + str); // code为2 电机过流
+                        if(!is_debug_channel){
+                            notice_fault();//上报异常
+                        }
+                        break;
+                    case 3:
+                        $('#machine_msg').html("出货异常:" + str); // code为3 电机断线
+                        if(!is_debug_channel){
+                            notice_fault();//上报异常
+                        }
+                        break;
+                    case 4:
+                        $('#machine_msg').html("出货异常:" + str); // code为4 电机无停止信号
+                        if(!is_debug_channel){
+                            notice_fault();//上报异常
+                        }
+                        break;
+                    case 5:
+                        $('#machine_msg').html("出货异常:" + str); // code为5 出货超时
+                        if(!is_debug_channel){
+                            notice_fault();//上报异常
+                        }
+                        break;
+                }
+                break;
+            case 3:
+                switch (code) {
+                    case 0: // code为0 暂时不能出货  要处理延迟出货！
+                        $('#machine_msg').html(str);
+                        setTimeout(function () {
+                            //Android.checkSoldGood(now_goods_machine);  //还会继续回调type=3的消息
+                        },3000);
+                        break;
+                    case 1: // code为1 可以出货
+                        $('#machine_msg').html("准备出货");
+                        $("#go_buy").trigger('click');
+                        break;
+                }
+                break;
+            case 4:
+                if(show_take_godds==1){
+                    $('#machine_msg').html("请取走您的货品");
+                    setTimeout(function () {
+                        $('#machine_msg').hide();
+                        $('#machine_msg_bg').hide();
+                    }, 6000);
+
+                }else{
+                    $('#machine_msg').html("出货完成");
+                }
+                break;
+            case 5:
+                $('#machine_msg').html(msg);
+                setTimeout(function () {
+                    $('#machine_msg').hide();
+                    $('#machine_msg_bg').hide();
+                }, 1000);
+                break;
+            case 6:
+                $('#machine_msg').html();  //端口关闭
+                setTimeout(function () {
+                    $('#machine_msg').hide();
+                    $('#machine_msg_bg').hide();
+                }, 1000);
+                break;
+            case 7: //调试某货道失败
+                $('[data-channel_id="'+code+'"]').css('color','red');
+                break;
+            case 8: //调试某货道成功
+                $('[data-channel_id="'+code+'"]').css('color','#0c9c6e');
+                break;
+            case 9: //调试某货道成功
+                $('#debug_all_channel').html("全货道检测");
+                $('#machine_msg').html("全货道检测完毕");
+                setTimeout(function () {
+                    $('#machine_msg').hide();
+                    $('#machine_msg_bg').hide();
+                }, 3000);
+                break;
+
+
+        }
+    }
+    //现金收银监听器
+    function cash_msg(type, str, code) {
+        switch (type) {
+            case 100:
+                var already_pay = $(".cash_payed").html()*1;
+                console.log(already_pay);
+                already_pay += code*1;
+                console.log(already_pay);
+                $(".cash_payed").html(already_pay);
+                if(need_notice){
+                    check_cash_pay();
+                }
+                break;
+            case 101:
+                $('#machine_msg').show();
+                $('#machine_msg_bg').show();
+                $('#show_tips').hide();
+                $('#machine_msg').html("现金收银器连接失败");
+                break;
+        }
+    }
+
+
+    if (machine_code == null || machine_token == null) {
+        $('#manager').show();
+        try {
+            $('#set_machine_code').val(Android.get_machine_code());
+        } catch (e) {
+        }
+    }
+
+    //体温表
+    var show_temp_num = radialIndicator('#show_temp_num', {
+        barWidth: 30,
+        radius: 200,
+        initValue: 0,
+        roundCorner: true,
+        format: '##.# ℃',
+        minValue: 0,
+        maxValue: 600,
+    });
+    //检测现金支付结果，并发起支付成功通知，并开始找零
+    function check_cash_pay(){
+        var payed = $(".cash_payed").html()*1;
+        var need_pay = $(".cash_need_pay").html()*1;
+        if(need_pay>0 && need_pay <= payed && payed > 0){
+            console.log("发起支付成功通知");
+            $.ajax({
+                url:CASH_PAY_NOTIFY_URL,
+                type:'POST',
+                dataType:'JSON',
+                data:{
+                    out_trade_no:now_pay_order_no,
+                    total_fee:need_pay
+                },
+                success:function(response){
+                    console.log("发起支付成功通知",1);
+                    if(response.state == 1){
+                        console.log("发起支付成功通知",2);
+                        need_notice = false;//设置为不用再检测现金交易
+                        var need_return = payed-need_pay;//如果需要退币
+                        need_return = parseInt(need_return);
+                        if(need_return > 0){
+                            $(".cash_need_return").html(need_return);//展示需要退币的数量
+                            Android.cash_return(need_return);//通知机器退币
+                            console.log("发起支付成功通知",3);
+                        }else{
+                            $(".cash_need_return").html(0);
+                        }
+                        setTimeout(function () {
+                            $(".cash_payed").html(0);//已支付的为0
+                        },2000);
+                    }
+                }
+
+            });
+        }
+    }
+    $("#cash_pay").on("click",function () {
+        $("#show_cash_pay").show();
+        need_notice = true;//开启检测现金交易
+        check_cash_pay();
+    });
+    $("#close_cash_pay").on("click",function(){
+        $("#show_cash_pay").hide();
+        need_notice = false;//设置为不用再检测现金交易
+    });
+    setInterval(function () {
+        var payed = $(".cash_payed").html()*1;
+        if(payed>0){
+            $('#cash_show').html("已投入:"+payed+"元");
+            $('#cash_show').show();
+        }else{
+            $('#cash_show').hide();
+        }
+    },1000);
+
+    //心跳数据
+    function get_online_heart() {
+        dmgc_ajax({
+            data: {
+                api_type: 'heart',
+            },
+            success: function (rs) {
+                rs = JSON.parse(rs);
+                if (rs.state == 1) {
+                    $('#signal').removeClass("signal_error");
+                    $('#signal').addClass("signal_active");
+                }
+            },
+            error: function () {
+                $('#signal').removeClass("signal_active");
+                $('#signal').addClass("signal_error");
+            }
+        });
+    }
+
+    //异常上报 使用读取订单二位码时记录的订单编号和货道编号
+    function notice_fault() {
+        dmgc_ajax({
+            data: {
+                api_type: 'notice_fault',
+                fault_type:'出货失败,订单号:'+now_pay_order_no,
+                fault_content:'货道编号：'+now_pay_order_channelId
+            },
+            success: function (rs) {
+
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    //读取商品列表
+    function get_goods() {
+        dmgc_ajax({
+            data: {
+                api_type: "get_goods"
+            },
+            success: function (backdata) {
+                backdata = JSON.parse(backdata);
+                if (backdata.state == 1) {
+                    IMAGE_DOMAIN = backdata.data.image_domain;
+                    goods_cate = backdata.data.cate;
+                    goods_list = backdata.data.goods;
+                    dom_cate();//渲染分类
+                    dom_goods();//渲染产品
+                    showcate(); //显示分类+产品
+                }
+            },
+            error: function () {
+
+            },
+            complete: function () {
+
+            }
+        });
+    }
+
+    //渲染产品分类
+    function dom_cate() {
+        if (typeof(goods_cate) != "undefined" && goods_cate != null && goods_cate != "" && goods_cate.length > 0) {
+            var _html = '';
+            for (i in goods_cate) {
+                var item = goods_cate[i];
+                _html += '<li class="cate_one_box" data-cate_id="' + item['cate_id'] + '" data-cate_pid="' + item['cate_pid'] + '" data-cate_is_leaf="' + item['cate_is_leaf'] + '" data-cate_title="' + item['cate_title'] + '">' +
+                        '   <div class="cate_one">' + item['cate_title'] + '</div>' +
+                        '</li>';
+            }
+            $('#cate_list').html(_html);
+            $('.cate_one_box').off('click').on('click', function () {
+                up_cate_pid = now_cate_pid;
+                now_cate_pid = $(this).data("cate_id");
+                showcate(); //显示分类+产品
+            });
+        } else {
+            alert("没有分类");
+        }
+    }
+    //渲染商品列表
+    function dom_goods() {
+    	console.log(goods_list);
+        if (typeof(goods_list) != "undefined" && goods_list != null && goods_list != "" && goods_list.length > 0) {
+            var _html = '';
+            for (i in goods_list) {
+                var item = goods_list[i];
+                _html += '<li class="goods_one_box" style="position:relative" data-goods_id="' + item['goods_id'] + '" data-goods_cate_id="' + item['goods_cate_id'] + '" data-goods_title="' + item['goods_title'] + '" data-goods_cover="' + item['goods_cover'] + '" data-goods_price="' + item['goods_price'] + '" data-goods_desc="' + item['goods_desc'] + '"data-goods_type="' + item['goods_type']+ '"data-goods_spec="' + item['goods_spec'] + '">' +
+                        '   <div class="goods_one">' +
+                        '       <div class="goods_one_pic">' +
+                        '           <img src="' + item['goods_cover'] + '" width="100%">' +
+                        '       </div>' +
+                        '       <div>￥' + item['goods_price'] * 1 + '</div>' +
+                        '       <div>' + item['goods_title'] + '</div>' +
+                        '   </div>' +
+                        '</li>';
+            }
+            $('#goods_list').html(_html);
+            //添加处方药标注
+            $(".goods_one_box").each(function(){
+            	if($(this).data("goods_type") == 2){
+//          		alert($(this).data("goods_title"));
+					var rx_type = '<img src="./images/rx_type_bugle.png" style="position:absolute;right:5px;bottom:5px;width:25%">'
+					$(this).find(".goods_one_pic").append(rx_type);
+            	}
+            });
+        } else {
+            alert("没有商品");
+        }
+    }
+    
+    //点击一个产品
+    $('#goods_list').on('click','.goods_one_box', function () {
+        var goods_id = $(this).data("goods_id");
+        var goods_cate_id = $(this).data("goods_cate_id");
+        var goods_title = $(this).data("goods_title");
+        var goods_price = $(this).data("goods_price");
+        var goods_cover = $(this).data("goods_cover");
+        var goods_desc = $(this).data("goods_desc");
+        var goods_type = $(this).data("goods_type");
+        var goods_spec = $(this).data("goods_spec");
+        $('#show_goods_pic').attr("src", goods_cover);
+        $('#show_goods_title').html(goods_title);
+        $('#show_goods_spec').html("规格："+goods_spec);
+        $('#show_goods_channel').html("");
+        $('#show_goods_price').html("￥"+goods_price);
+        $('#show_goods_desc').html(goods_desc);
+        $('#qr_wechat').html("");
+        $('#qr_alipay').html("");
+        $("#fail_reson").html("");
+        need_notice = false;
+        $(".cash_need_pay").html(0);//需要支付的现金重置为0
+        $(".cash_need_return").html(0);//找零金额重置为0
+        $('#show_goods').show();
+		if(goods_type == 2){
+			$("#rx_full_img").css("opacity",1);
+			$("#pay_type_box").hide();
+			$("#goods_examine_box").show();
+			$("#sure_examine_box").show();
+			$("#wait_examine_box").hide();
+			$("#examine_success_box").hide();
+			$("#examine_fail_box").hide();
+			$("#sure_examine_btn").off('click').on("click",function(){
+				$("#sure_examine_box").hide();
+				$("#wait_examine_box").show();
+				dmgc_ajax({
+					data:{
+						api_type: 'get_order_qr',
+                		goods_id: goods_id
+					},
+					success:function(backdata){
+						timer1 = setInterval(function(){
+							dmgc_ajax({
+								data:{
+									api_type: 'check_order_audit',
+				            		order_id: JSON.parse(backdata).data.order_id
+								},
+								success:function(backdata2){
+									if(JSON.parse(backdata2).state == 1){
+										clearInterval(timer1);
+										$("#wait_examine_box").hide();
+										$("#examine_success_box").show();
+										$('#show_goods_loading').show();
+										//请求二维码
+								        dmgc_ajax({
+								            data: {
+								                api_type: 'get_order_qr',
+								                goods_id: goods_id
+								            },
+								            success: function (backdata) {
+								                var rs = JSON.parse(backdata);
+								                if (rs.state == '1') {
+								                    //正常生成订单
+								                    var order_id = rs.data.order_id;
+								                    var pay_no = rs.data.pay_no;
+								
+								                    //记录当前订单和出货货道编号
+								                    now_pay_order_no = pay_no;
+								                    now_pay_order_channelId = rs.data.channel_name;
+								
+								                    $('#show_goods_channel').html(rs.data.channel_name); //提示出货货道编号
+								                    $('#qr_wechat').html("");
+								                    $('#qr_alipay').html("");
+								
+								                    jQuery('#qr_wechat').qrcode({
+								                        render: "canvas",
+								                        text: rs.data['wechat'],
+								                        width: 300, //宽度
+								                        height: 300, //高度
+								                    });
+								                    jQuery('#qr_alipay').qrcode({
+								                        render: "canvas",
+								                        text: rs.data['alipay'],
+								                        width: 300, //宽度
+								                        height: 300, //高度
+								                    });
+													
+								                    $(".cash_need_pay").html(rs.data.orders_total_money);//add by lengjianghua
+													
+													$("#goods_examine_box").hide();
+													$("#pay_type_box").show();
+													
+								                    //循环检查付款状态
+								                    timer_check_pay = setInterval(function () {
+								                        dmgc_ajax({
+								                            timeout: 3000,
+								                            data: {
+								                                api_type: 'check_order_pay',
+								                                order_id: order_id,
+								                                pay_no: pay_no
+								                            },
+								                            success: function (order_backdata) {
+								                                var order_rs = JSON.parse(order_backdata);
+								                                if (order_rs.data['scan'] == 1) {
+								                                    $('#show_tips').show();
+								                                    $('#show_tips_str').show();
+								                                    $('#show_tips_str').html("扫码成功,请付款");
+								                                }
+								                                if (order_rs.state == 1) {
+								                                    clearInterval(timer_check_pay); //停止timer循环
+								                                    now_cate_pid = 0;
+								                                    showcate(true);
+								                                    $("#show_cash_pay").hide();
+								                                    $('#show_tips').show();
+								                                    $('#show_tips_str').show();
+								                                    $('#show_tips_str').html("正在为您出货");
+								                                    //通知机器出货  先检查是否可以出货
+								                                    var channel = order_rs.data['channel'].split('柜');
+								                                    now_goods_machine = channel[0]*1;
+								                                    now_goods_channel = channel[1]*1;
+								                                    //Android.checkSoldGood(now_goods_machine); //可以先做检测
+								                                    Android.machine_good(now_goods_machine,now_goods_channel);
+								                                }
+								                            }
+								                        });
+								                    }, 3500);
+								
+								
+								                } else if (rs.state == '0') {
+								                    $('#show_tips').show();
+								                    $('#show_tips_str').html("该商品已售罄");
+								                    setTimeout(function () {
+								                        $('#show_tips').hide();
+								                        $('#show_goods').hide();
+								                    }, 3000);
+								                } else {
+								                    $('#show_tips').show();
+								                    $('#show_tips_str').html(rs.msg);
+								                    setTimeout(function () {
+								                        $('#show_tips').hide();
+								                        $('#show_goods').hide();
+								                    }, 3000);
+								                }
+								            },
+								            complete: function () {
+								                $('#show_goods_loading').hide();
+								            }
+								        });
+									}else if(JSON.parse(backdata2).state == 0){
+										clearInterval(timer1);
+										$("#fail_reson").html(JSON.parse(backdata2).data);
+										$("#wait_examine_box").hide();
+										$("#examine_fail_box").show();
+									}
+								},
+							});
+						},1000)
+					},
+				});
+			});
+		}else{
+			$("#rx_full_img").css("opacity",0);
+			$("#goods_examine_box").hide();
+			$("#pay_type_box").show();
+			$('#show_goods_loading').show();
+			//请求二维码
+	        dmgc_ajax({
+	            data: {
+	                api_type: 'get_order_qr',
+	                goods_id: goods_id
+	            },
+	            success: function (backdata) {
+	                var rs = JSON.parse(backdata);
+	                if (rs.state == '1') {
+	                    //正常生成订单
+	                    var order_id = rs.data.order_id;
+	                    var pay_no = rs.data.pay_no;
+	
+	                    //记录当前订单和出货货道编号
+	                    now_pay_order_no = pay_no;
+	                    now_pay_order_channelId = rs.data.channel_name;
+	
+	                    $('#show_goods_channel').html(rs.data.channel_name); //提示出货货道编号
+	                    $('#qr_wechat').html("");
+	                    $('#qr_alipay').html("");
+	
+	                    jQuery('#qr_wechat').qrcode({
+	                        render: "canvas",
+	                        text: rs.data['wechat'],
+	                        width: 300, //宽度
+	                        height: 300, //高度
+	                    });
+	                    jQuery('#qr_alipay').qrcode({
+	                        render: "canvas",
+	                        text: rs.data['alipay'],
+	                        width: 300, //宽度
+	                        height: 300, //高度
+	                    });
+	
+	                    $(".cash_need_pay").html(rs.data.orders_total_money);//add by lengjianghua
+	
+	                    //循环检查付款状态
+	                    timer_check_pay = setInterval(function () {
+	                        dmgc_ajax({
+	                            timeout: 3000,
+	                            data: {
+	                                api_type: 'check_order_pay',
+	                                order_id: order_id,
+	                                pay_no: pay_no
+	                            },
+	                            success: function (order_backdata) {
+	                                var order_rs = JSON.parse(order_backdata);
+	                                if (order_rs.data['scan'] == 1) {
+	                                    $('#show_tips').show();
+	                                    $('#show_tips_str').show();
+	                                    $('#show_tips_str').html("扫码成功,请付款");
+	                                }
+	                                if (order_rs.state == 1) {
+	                                    clearInterval(timer_check_pay); //停止timer循环
+	                                    now_cate_pid = 0;
+	                                    showcate(true);
+	                                    $("#show_cash_pay").hide();
+	                                    $('#show_tips').show();
+	                                    $('#show_tips_str').show();
+	                                    $('#show_tips_str').html("正在为您出货");
+	                                    //通知机器出货  先检查是否可以出货
+	                                    var channel = order_rs.data['channel'].split('柜');
+	                                    now_goods_machine = channel[0]*1;
+	                                    now_goods_channel = channel[1]*1;
+	                                    //Android.checkSoldGood(now_goods_machine); //可以先做检测
+	                                    Android.machine_good(now_goods_machine,now_goods_channel);
+	                                }
+	                            }
+	                        });
+	                    }, 3500);
+	
+	
+	                } else if (rs.state == '0') {
+	                    $('#show_tips').show();
+	                    $('#show_tips_str').html("该商品已售罄");
+	                    setTimeout(function () {
+	                        $('#show_tips').hide();
+	                        $('#show_goods').hide();
+	                    }, 3000);
+	                } else {
+	                    $('#show_tips').show();
+	                    $('#show_tips_str').html(rs.msg);
+	                    setTimeout(function () {
+	                        $('#show_tips').hide();
+	                        $('#show_goods').hide();
+	                    }, 3000);
+	                }
+	            },
+	            complete: function () {
+	                $('#show_goods_loading').hide();
+	            }
+	        });
+		}
+
+    });
+
+
+    //控制分类和商品显示
+    function showcate(isForce) {
+        if (now_cate_pid > 0) {
+            $('.btn_back').show();
+            //$('.btn_yaopin').hide();
+        } else {
+            $('.btn_back').hide();
+            //$('.btn_yaopin').show();
+        }
+        $('.cate_one_box').hide();
+        $('.goods_one_box').hide();
+        $('#show_tips').hide();
+        $('.cate_one_box').each(function () {
+            //先处理分类显示
+            var _this_pid = $(this).data("cate_pid");
+            if (_this_pid == now_cate_pid) {
+                $(this).show();
+            }
+            //再处理产品显示
+            var _this_is_leaf = $(this).data("cate_is_leaf");
+            if (_this_is_leaf == 1) {
+                $('.goods_one_box').each(function () {
+                    var _this_goods_cate_id = $(this).data("goods_cate_id");
+                    if (now_cate_pid == _this_goods_cate_id) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }
+        });
+
+        $('#check_temp_box').hide(); //隐藏体温界面
+        $('#yaopin_box').hide(); //隐藏药品界面
+
+
+        if(isForce){
+            $('#show_goods').hide(); //关闭产品详情页
+            try {
+                clearInterval(timer_check_pay);  //停止支付检测
+            } catch (e) {
+            }
+        }
+
+
+    }
+     //控制分类和商品显示
+    function showcate1(isForce) {
+        if (now_cate_pid > 0) {
+            $('.btn_back').show();
+            //$('.btn_yaopin').hide();
+        } else {
+            $('.btn_back').hide();
+            //$('.btn_yaopin').show();
+        }
+        $('.cate_one_box').hide();
+        $('.goods_one_box').hide();
+        $('#show_tips').hide();
+        $('.cate_one_box').each(function () {
+            //先处理分类显示
+            var _this_pid = $(this).data("cate_pid");
+            if (_this_pid == now_cate_pid) {
+                $(this).show();
+            }
+            //再处理产品显示
+            var _this_is_leaf = $(this).data("cate_is_leaf");
+            if (_this_is_leaf == 1) {
+                $('.goods_one_box').each(function () {
+                    var _this_goods_cate_id = $(this).data("goods_cate_id");
+                    if (now_cate_pid == _this_goods_cate_id) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }
+        });
+
+        $('#check_temp_box').hide(); //隐藏体温界面
+        $('#yaopin_box').hide(); //隐藏药品界面
+
+
+        if(isForce){
+            $('#show_goods').hide(); //关闭产品详情页
+            try {
+                clearInterval(timer_check_pay);  //停止支付检测
+            } catch (e) {
+            }
+        }
+
+
+    }
+    //点击返回按钮
+    $('.btn_back').on('click', function () {
+        if($('#show_goods').css('display')!='none'){
+        	clearInterval(timer1);
+            $('#show_goods').hide();
+        }else{
+            var up_temp_cate_id = $('[data-cate_id=' + up_cate_pid + '].cate_one_box').data("cate_pid");
+            now_cate_pid = up_cate_pid;
+            up_cate_pid = up_temp_cate_id;
+            showcate();//显示分类+产品
+            if (now_cate_pid == 0) {
+                $('.btn_back').hide();
+            }
+        }
+
+    });
+
+    //读取广告列表
+    function get_ad_list() {
+        dmgc_ajax({
+            data: {
+                api_type: "ad_list"
+            },
+            success: function (backdata) {
+                backdata = JSON.parse(backdata);
+                if (backdata.state == 1) {
+                    var userfull_files = ""; //有用的文件
+
+                    //处理默认播放资源下载
+                    if (backdata.data.default_resource!="" && IMAGE_DOMAIN != "") {
+                        try {
+                            var url = IMAGE_DOMAIN + backdata.data.default_resource.default_file;
+                            userfull_files += IMAGE_DOMAIN + backdata.data.default_resource.default_file + "|";
+                            Android.downloadfile(url+"");
+                            //TODO: 待完成
+                        } catch (e) {
+                        }
+                    }
+
+                    //处理下载
+                    if (backdata.data.resource_list.length > 0 && IMAGE_DOMAIN != "") {
+                        ad_list_down = backdata.data.resource_list;
+                        //逐一调用Native创建线程下载
+                        for (i in ad_list_down) {
+                            try {
+                                var url = IMAGE_DOMAIN + ad_list_down[i]["resource_file"];
+                                userfull_files += url + "|";
+                                Android.downloadfile(url+"");
+                                //TODO: 待完成
+                            } catch (e) {
+                            }
+                        }
+                    }
+
+                    //处理播放列表
+                    ad_list = []; //清空
+                    if (backdata.data.advertise_list.length > 0 && IMAGE_DOMAIN != "") {
+                        for(i in backdata.data.advertise_list){
+                            ad_list.push(backdata.data.advertise_list[i]);
+                        }
+                    }else{
+                        var default_ad = {};
+                        default_ad.resource_file = backdata.data.default_resource['default_file']; //资源地址
+                        default_ad.carousel_duration_time = backdata.data.default_resource['default_second']; //单条长度
+                        default_ad.resource_type = backdata.data.default_resource['default_type']; //资源类型
+                        default_ad.carousel_carousel_times = 2; //默认播放2次
+                        ad_list.push(default_ad);
+                    }
+                    console.log("播放清单",ad_list);
+
+                    //删除无用的文件
+                    try {
+                        Android.clear_nouse_files(userfull_files);
+                    } catch (e) {}
+                }
+            },
+            error: function () {
+
+            },
+            complete: function () {
+
+            }
+        });
+    }
+
+    setInterval(function () {
+        if ($("#player").css("display") != 'none') {
+            //如果临时播放列表空了
+            if (typeof(ad_list_temp) == 'undefined' || ad_list_temp == null || ad_list_temp == "" || ad_list_temp.length == 0) {
+                //并且要播放的广告列表有内容
+                if (typeof(ad_list) != 'undefined' && ad_list.length > 0) {
+                    //深拷贝要播放的数据到临时列表
+                    ad_list_temp = JSON.parse(JSON.stringify(ad_list));
+                }
+            } else {
+                if (ad_list_temp.length > 0) {
+                    if (!is_playing) {
+
+                        //在合法范围内，取得随机要播放的键值
+                        var random_num = myRandom(0, ad_list_temp.length - 1);
+                        //保证每次不同
+                        if (now_play_num != 0 && now_play_num == random_num && ad_list_temp.length > 1) {
+                            while (now_play_num == random_num) {
+                                random_num = myRandom(0, ad_list_temp.length - 1);
+                            }
+                        }
+                        now_play_num = random_num;
+
+                        //取出当前要播放的
+                        var now_play = ad_list_temp[random_num];
+                        var url = IMAGE_DOMAIN + now_play.resource_file;
+                        var type = now_play.resource_type;
+                        var second = now_play.carousel_duration_time;
+                        if (!second || second <= 4) {
+                            second = 5;
+                        }
+                        //减少一次轮播次数
+                        ad_list_temp[random_num]['carousel_carousel_times'] = (ad_list_temp[random_num]['carousel_carousel_times'] * 1) - 1;
+                        if (ad_list_temp[random_num]['carousel_carousel_times'] <= 0) {
+                            ad_list_temp.splice(random_num, 1);
+                        }
+                        //开始播放
+                        try {
+                            console.log("播放广告" + second + "S", url);
+                            var filePath="none";
+                            try{
+                                filePath = Android.getVideoFilePath(url+""); //读取下载后的本地路径
+                            }catch(e){}
+                            console.log("播放地址" + filePath);
+                            if(filePath!="none"){
+                                is_playing = true;
+                                if (type == "video") {
+                                    $('#my_ad_pic').hide();
+                                    $('#my_video').show();
+                                    $('#my_video').attr("src", filePath);
+                                    $('#my_video').trigger('play');
+
+                                    var tryTime=0;
+                                    videoPlayTimer = setInterval(function () {
+                                        var video = document.getElementById("my_video");
+                                        console.log("当前广告已播放"+video.currentTime+"s"+"合计应播放："+second+"s");
+                                        if (video.currentTime>=second || tryTime>=6){
+                                            clearInterval(videoPlayTimer);
+                                            is_playing = false;
+                                        }
+                                        if (video.currentTime==0){
+                                            tryTime++;
+                                        }
+                                    },1000);
+
+                                } else {
+                                    $('#my_video').trigger('pause');
+                                    $('#my_video').hide();
+                                    $('#my_ad_pic').show();
+                                    $('#my_ad_pic').find('img').attr("src", filePath);
+                                    //等待广告需要播放的时长后恢复可播放状态
+                                    setTimeout(function () {
+                                        is_playing = false;
+                                    }, second * 1000);
+                                }
+                            }else{
+                                console.log("播放广告未下载完成");
+                            }
+                        } catch (e) {
+                        }
+                    }
+                }
+            }
+        }
+    }, 500);
+
+    function myRandom(lowValue, highValue) {
+        var choice = highValue - lowValue + 1;
+        return Math.floor(Math.random() * choice + lowValue);
+    }
+
+    //界面N秒无操作
+    var no_action_time = 0;
+    setInterval(function () {
+        no_action_time++;
+        if (no_action_time >= no_action_time_limit) {
+            $("#player").show();
+            $('#check_temp_box').hide(); //关闭体温测试
+            $('#show_tips').hide(); //关闭提示界面
+            showcate();
+        }else if(no_action_time >= no_action_time_index2){
+        	clearInterval(timer1);
+        	$("#index2").show();
+        	$('#check_temp_box').hide(); //关闭体温测试
+            $('#show_tips').hide(); //关闭提示界面
+        }
+    }, 1000);
+
+    //隐藏广告播放
+    $("#player,#go_buy,body").on('click', function () {
+        $('#my_video').trigger('pause');
+        $('#player').hide();
+        no_action_time = 0;
+        clearInterval(videoPlayTimer); //停止vidoe计时器
+        is_playing = false;
+    });
+
+
+    //点击立即购买
+    $("#go_buy,#go_buy2").on('click', function () {
+    	$("#index2").hide();
+    	clearInterval(timer1);
+        now_cate_pid = 0;
+        showcate(true);
+    });
+
+    //点击测试体温
+    $("#check_temp,#check_temp2").on('click', function () {
+    	clearInterval(timer1);
+        if ($("#check_temp_box").css("display") == 'none') {
+        	$("#index2").hide();
+            $('#check_temp_box').show();
+            $('#start_check_temp').off('click').on('click', function () {
+                $('#start_check_temp').html("请准备,5秒后开始");
+                var i = 15;
+                var temp_value = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                var start = 0;
+                var t = setInterval(function () {
+                    i--;
+                    if(i>10){
+                        $('#start_check_temp').html("请准备,"+(i-10)+"秒后开始");
+                    }
+                    if (i <= 10) {
+                        $('#start_check_temp').html("已开始检测，" + i + "秒");
+                        $('#countdown_wav')[0].play();
+                        try {
+                            temp_value[start] = Android.get_tiwen();
+                        } catch (e) {
+                            temp_value[start] = 365;
+                        }
+                        show_temp_num.animate(temp_value[start]+tiwen_plus*10);//加上体温补偿);
+                        start++;
+                    }
+
+                    if (i <= 0) {
+                        clearInterval(t);
+                        $('#start_check_temp').html("点击开始检测");
+                        //去掉最大 最小
+                        var max = 0;
+                        var low = 999;
+                        var max_index = -1;
+                        var low_index = -1;
+                        for (i in temp_value) {
+                            if (temp_value[i] > 0) {
+                                if (temp_value[i] > max) {
+                                    max = temp_value[i];
+                                    max_index = i;
+                                }
+                                if (temp_value[i] < low) {
+                                    low = temp_value[i];
+                                    low_index = i;
+                                }
+                            }
+                        }
+                        var total = 0;
+                        var total_index = 0;
+                        for (i in temp_value) {
+                            if (i != max_index && i != low_index) {
+                                total += temp_value[i];
+                                total_index ++;
+                            }
+                        }
+                        var avg = total / total_index;
+                        avg = avg+tiwen_plus*10;//加上体温补偿
+                        avg = avg.toFixed(0);
+                        show_temp_num.animate(avg);
+                    }
+                }, 1000);
+
+            });
+            try {
+                clearInterval(timer_check_pay);
+            } catch (e) {
+            }
+            $('#yaopin_box').hide();
+        }
+    });
+
+    //关闭提示
+    $('#show_tips').on('click', function () {
+        $('#show_tips').hide();
+        try {
+            clearInterval(timer_check_pay);
+            clearInterval(timer1);
+        } catch (e) {
+        }
+    });
+
+
+    //管理员管理
+    var click_times = 0;
+    $('#admin').on('click', function () {
+        click_times++;
+        if (click_times >= 6) {
+            click_times = 0;
+            $('#admin_login').show();
+            try {
+                Android.show_manager();
+            } catch (e) {
+            }
+        }
+
+    });
+    setInterval(function () {
+        click_times = 0;
+    }, 3000);
+    $('#close_manager').on('click', function () {
+        $('#manager').hide();
+    });
+
+
+    $('#admin_login_close').on('click', function () {
+        $('#admin_login').hide();
+    });
+    $('.admin_pass_btn').on('click', function () {
+        var num = $(this).data('num');
+        if (num >= 0) {
+            var string = $('#admin_password').val() + "" + num;
+            $('#admin_password').val(string.trim());
+        }
+    });
+    $('#admin_pass_delete').on('click', function () {
+        var now_pass = $('#admin_password').val();
+        now_pass = now_pass.substring(0, now_pass.length - 1);
+        $('#admin_password').val(now_pass);
+    });
+    $('#admin_pass_sure').on('click', function () {
+        var now_pass = $('#admin_password').val();
+        try {
+            $('#set_machine_code').val(Android.get_machine_code());
+        } catch (e) {
+            $('#set_machine_code').val(machine_code);
+        }
+        $('#set_machine_token').val(machine_token);
+        $('#set_machine_num').val(machine_num);
+
+        if (machine_code == "" || machine_code == null || machine_token == "" || machine_token == null || now_pass=="159753") {
+            $('#admin_login').hide();
+            $("#index2").hide();
+            $('.action_box').show();
+            $('.action_super').hide();
+            $('#action_box').show();
+            $('#manager').show();
+            $('#yaopin_box').hide();
+            //$('#btn_yaopin').hide();
+            $('#check_temp_box').hide(); //隐藏体温界面
+        } else {
+            dmgc_ajax({
+                data: {
+                    api_type: 'api_check_password',
+                    password: now_pass
+                },
+                success: function (rs) {
+                    rs = JSON.parse(rs);
+                    if (rs.state == 1) {
+                        $('#admin_login').hide();
+                        $("#index2").hide();
+                        $('.action_box').show();
+                        $('.action_super').hide();
+                        $('#action_box').show();
+                        $('#manager').show();
+                        $('#yaopin_box').hide();
+                        //$('#btn_yaopin').hide();
+                        $('#check_temp_box').hide(); //隐藏体温界面
+                    } else {
+                        $('#show_tips_str').html("密码错误");
+                        $('#show_tips').show();
+                        setTimeout(function () {
+                            $('#show_tips').hide();
+                        }, 2000);
+                    }
+                },
+                complete: function () {
+                    $('#admin_password').val("");
+                }
+            });
+        }
+    });
+
+    //弹出机器修复确认框
+    $('#error_is_ok').on('click', function () {
+        $('#user_config_fixed_box').show();
+    });
+
+    $('#user_config_fixed_sure').on('click', function () {
+        dmgc_ajax({
+            data: {
+                api_type: 'update_fault',
+                deal_result: '现场处理完成'
+            },
+            success: function (rs) {
+                rs = JSON.parse(rs);
+                if (rs.state == 1) {
+                    $('#set_machine_box').hide();
+                    $('#show_tips_str').html("修复成功,即将重启");
+                    $('#show_tips').show();
+                    setTimeout(function () {
+                        $('#show_tips').hide();
+                        try {
+                            Android.app_restart();
+                        } catch (e) {
+                        }
+                    }, 2000);
+                } else {
+                    $('#set_machine_box').hide();
+                    $('#show_tips_str').html("修复失败");
+                    $('#show_tips').show();
+                    setTimeout(function () {
+                        $('#show_tips').hide();
+                    }, 2000);
+                }
+                $('#user_config_fixed_box').hide();
+            }
+        });
+    });
+
+    $('#open_supper').on('click', function () {
+        $('.action_box').hide();
+        $('.action_super').show();
+    });
+
+    $('#restart_app').on('click', function () {
+        try {
+            Android.app_restart();
+        } catch (e) {
+        }
+    });
+    $('#close_app').on('click', function () {
+        try {
+            Android.app_close();
+        } catch (e) {
+        }
+    });
+
+
+    $('#go_back_manager').on('click', function () {
+        $('.action_box').show();
+        $('.action_super').hide();
+    });
+
+
+    //补货&换货
+    $('#user_config_change_goods').on('click', function () {
+        $('#user_config_change_goods_box').show();
+        dmgc_ajax({
+            data: {
+                api_type: 'order_list',
+            },
+            success: function (rs) {
+                rs = JSON.parse(rs);
+                if (rs.state == 1) {
+                    var apply_list = rs.data.apply_list;
+                    if (apply_list.length > 0) {
+                        var _html_goods = '<tr><td>补货编号</td><td>提交时间</td><td>状态</td><td>操作</td></tr>';
+                        for (i in apply_list) {
+                            _html_goods += '<tr>';
+                            _html_goods += '    <td>' + apply_list[i]['apply_id'] + '</td>';
+                            _html_goods += '    <td>' + apply_list[i]['apply_time_str'] + '</td>';
+                            if (apply_list[i]['apply_status'] == 30) {
+                                _html_goods += '    <td>已完成</td>';
+                                _html_goods += '    <td><span class="sure_change" data-type="show" style="padding: 10px 20px;background-color: #0c9c6e;color: #fff;" data-order_id="' + apply_list[i]['apply_id'] + '">查看</span></td>';
+                            } else if (apply_list[i]['apply_status'] == 50) {
+                                _html_goods += '    <td>待处理</td>';
+                                _html_goods += '    <td><span class="sure_change" data-type="action" style="padding: 10px 20px;background-color: #0c9c6e;color: #fff;" data-order_id="' + apply_list[i]['apply_id'] + '">补货换货</span></td>';
+                            }
+                            _html_goods += '</tr>';
+                        }
+                        $('#user_config_change_goods_list').html(_html_goods);
+                        //点击查看补货详情
+                        $('.sure_change').unbind('click').on('click', function () {
+                            $('#user_config_change_goods_sure_box').show();
+                            $('#user_config_change_goods_sure_list').html("");
+                            if ($(this).data('type') == 'show') {
+                                $('#user_config_change_goods_sure_btn').hide();
+                            } else {
+                                $('#user_config_change_goods_sure_btn').show();
+                            }
+
+                            var order_id = $(this).data('order_id');
+                            if (order_id > 0) {
+                                dmgc_ajax({
+                                    data: {
+                                        api_type: 'order_detail',
+                                        apply_id: order_id
+                                    },
+                                    success: function (rs) {
+                                        rs = JSON.parse(rs);
+                                        if (rs.state == 1) {
+                                            var apply_detail = rs.data.detail;
+                                            var _html_goods = '<tr><td>货道</td><td>类型</td><td>原产品</td><td>原数量</td><td>补&换产品</td><td>补&换数量</td></tr>';
+                                            for (i in apply_detail) {
+                                                _html_goods += '<tr>';
+                                                _html_goods += '    <td>' + apply_detail[i]['channel_name'] + '</td>';
+                                                if (apply_detail[i]['detail_apply_type'] == 1) {
+                                                    _html_goods += '    <td>补货</td>';
+                                                } else {
+                                                    _html_goods += '    <td style="color: lightcoral">换货</td>';
+                                                }
+                                                _html_goods += '    <td>' + apply_detail[i]['detail_old_goods_title'] + '</td>';
+                                                _html_goods += '    <td>' + apply_detail[i]['detail_stock'] + '</td>';
+                                                _html_goods += '    <td>' + apply_detail[i]['goods_title'] + '</td>';
+                                                _html_goods += '    <td>' + apply_detail[i]['detail_goods_number'] + '</td>';
+
+                                                _html_goods += '</tr>';
+                                            }
+                                            $('#user_config_change_goods_sure_list').html(_html_goods);
+                                            //关闭补货详情
+                                            $('#user_config_change_goods_sure_close').on('click', function () {
+                                                $('#user_config_change_goods_sure_box').hide();
+                                            });
+                                            //确认补货完成操作
+                                            $('#user_config_change_goods_sure_btn').on('click', function () {
+                                                $('#user_config_change_goods_comfirm_box').show();
+                                            });
+                                            //再次确认补货完成操作
+                                            $('#user_config_change_goods_comfirm_sure').on('click', function () {
+                                                dmgc_ajax({
+                                                    data: {
+                                                        api_type: 'sure_order',
+                                                        apply_id: order_id
+                                                    },
+                                                    success: function (rs) {
+                                                        rs = JSON.parse(rs);
+                                                        if (rs.state == 1) {
+                                                            get_goods(); //立即更新商品列表
+                                                            $('#show_tips_str').html("补货成功");
+                                                            $('#show_tips').show();
+                                                            setTimeout(function () {
+                                                                $('#show_tips').hide();
+                                                            }, 4000);
+                                                        } else {
+
+                                                            $('#show_tips_str').html("补货失败");
+                                                            $('#show_tips').show();
+                                                            setTimeout(function () {
+                                                                $('#show_tips').hide();
+                                                            }, 3000);
+                                                        }
+                                                    },
+                                                    complete: function () {
+                                                        $('#user_config_change_goods_sure_box').hide();
+                                                        $('#user_config_change_goods_comfirm_box').hide();
+                                                        $('#user_config_change_goods_box').hide();
+                                                    }
+                                                });
+
+                                            });
+                                        } else {
+                                            $('#show_tips_str').html("读取失败");
+                                            $('#show_tips').show();
+                                            setTimeout(function () {
+                                                $('#show_tips').hide();
+                                            }, 3000);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                } else {
+                    $('#show_tips_str').html("读取失败");
+                    $('#show_tips').show();
+                    setTimeout(function () {
+                        $('#show_tips').hide();
+                    }, 1000);
+                }
+            }
+        });
+    });
+    //关闭补货换货
+    $('#user_config_change_goods_close').on('click', function () {
+        $('#user_config_change_goods_box').hide();
+    });
+
+
+    $('#set_token').on('click', function () {
+        $('#set_machine_box').show();
+    });
+    $('#set_machine_ok,#set_machine_cancel').on('click', function () {
+        $('#set_machine_box').hide();
+    });
+    $('#set_machine_ok').on('click', function () {
+        machine_code = $('#set_machine_code').val();
+        machine_token = $('#set_machine_token').val();
+        machine_num = $('#set_machine_num').val();
+        window.localStorage.setItem("machine_code", machine_code);
+        window.localStorage.setItem("machine_token", machine_token);
+        window.localStorage.setItem("machine_num", machine_num);
+        $('#set_machine_box').hide();
+        $('#show_tips_str').show();
+        $('#show_tips_str').html("保存成功");
+        $('#show_tips').show();
+        setTimeout(function () {
+            $('#show_tips').hide();
+        }, 2000);
+    });
+
+    //当前调试的机器编号
+    var test_machine_id = 1;
+    //当前调试的货道编号
+    var test_channel_id = 0;
+    $('#test_channel').on('click', function () {
+        is_debug_channel = true;
+        show_take_godds = 0;
+        $('#show_debug_channel').show();
+        var _html = '';
+        var i_row = 0;
+        for (var i = 0; i <= 99; i++) {
+            if (i < 10) {
+                _html += '<span data-channel_id="' + i + '" class="one_channel_btn">0' + i + '</span>';
+            } else {
+                _html += '<span data-channel_id="' + i + '" class="one_channel_btn">' + i + '</span>';
+            }
+            if (i_row == 9) {
+                _html += '<br>';
+                i_row = 0;
+            } else {
+                i_row++;
+            }
+        }
+        $('#debug_channel_list').html(_html);
+
+        //单货道调试
+        $('.one_channel_btn').off('click').on('click', function () {
+            test_channel_id = $(this).data("channel_id");
+            $('.one_channel_btn').removeClass("one_machine_btn_active");
+            $(this).addClass("one_machine_btn_active");
+            try {
+                Android.machine_good(test_machine_id, test_channel_id);
+            } catch (e) {
+            }
+        });
+    });
+    $('.one_machine_btn').off('click').on('click', function () {
+        test_machine_id = $(this).data("machine_id");
+        $('.one_machine_btn').removeClass("one_machine_btn_active");
+        $(this).addClass("one_machine_btn_active");
+        $('.one_channel_btn').removeClass("one_machine_btn_active");
+        $('.one_channel_btn').css('color','#666');
+    });
+    //全货道调试
+    var isAllCheck = 0;
+    $('#debug_all_channel').off('click').on('click', function () {
+        $('.one_channel_btn').removeClass("one_machine_btn_active");
+        if(isAllCheck==0){
+            isAllCheck = 1;
+            $('.one_channel_btn').css('color','#666');
+            $('#debug_all_channel').html("停止检测");
+            try {
+                Android.test_all_channel(test_machine_id); //全货道检测
+            } catch (e) {
+            }
+        }else{
+            isAllCheck = 0;
+            $('#debug_all_channel').html("全货道检测");
+            try {
+                Android.stopAllCheck(); //停止全货道检测
+            } catch (e) {
+            }
+        }
+
+    });
+
+    $('#machine_msg_bg,#machine_msg').on('click',function () {
+        $('#machine_msg').hide();
+        $('#machine_msg_bg').hide();
+    });
+
+    //打开体温补偿设置
+    $('#set_tiwen').on('click',function () {
+        $('#set_tiwen_plus').val(tiwen_plus);
+        $('#set_tiwen_box').show();
+    });
+
+    //体温补偿确认设置
+    $('#set_tiwen_ok').on('click',function () {
+        tiwen_plus = $('#set_tiwen_plus').val();
+        window.localStorage.setItem("tiwen_plus",tiwen_plus);
+        $('#set_tiwen_box').hide();
+    });
+
+    //点击药品查询
+    var yaopin_type = 'gcyp';//默认是国药查询
+    $('#btn_yaopin,#btn_yaopin2').on('click',function () {
+    	clearInterval(timer1);
+    	$("#index2").hide();
+        $('#yaopin_box').show();
+        $('#check_temp_box').hide();
+        $('#yaopin_list_table').html('');
+        $('#yaopin_title').val('');
+    });
+    //切换药品查询类型
+    $('.yaopin_type').on('click',function () {
+        yaopin_type = $(this).data('type');
+        $('.yaopin_type').css('background-color','lightgray');
+        $(this).css('background-color','lightseagreen');
+    });
+    //点击药品查询->开始查询
+    $('#yaopin_start').on('click',function () {
+        $('#yaopin_list_table').html('<div style="text-align: center">查询中,请稍后...</div>');
+        var title = $('#yaopin_title').val();
+        if(title.length>0){
+
+            dmgc_ajax({
+                data:{
+                    api_type: 'yaopin',
+                    type: yaopin_type,
+                    mc: title,
+                },
+                success: function (backdata) {
+                    backdata = JSON.parse(backdata);
+                    if (backdata.StatusCode == 200) {
+                        var data_list = backdata.Data;
+                        data_list = JSON.parse(data_list);
+                        if(data_list.length>0){
+                            console.log(data_list);
+
+                            var _html_list = '';
+                            for(i in data_list){
+                                _html_list += '<tr>' +
+                                        '   <td style="width: 80%;color: #333">'+data_list[i]['CONTENT']+'</td>' +
+                                        '   <td style="text-align: center">' +
+                                        '       <div class="yaopin_info_btn" data-id="'+data_list[i]['ID']+'" style="padding: 0px 20px;">查看详情</div>' +
+                                        '   </td>' +
+                                        '</tr>';
+                            }
+                            $('#yaopin_list_table').html(_html_list);
+
+
+                            $('.yaopin_info_btn').off('click').on('click',function () {
+                                $('#yaopin_list_table').html('<div style="text-align: center">查询中,请稍后...</div>');
+                                var id = $(this).data('id');
+
+                                dmgc_ajax({
+                                    data: {
+                                        api_type: 'yaopin_info',
+                                        type: yaopin_type,
+                                        id: id,
+                                    },
+                                    success: function (backdata_info) {
+                                        backdata_info = JSON.parse(backdata_info);
+                                        if (backdata_info.StatusCode == 200) {
+                                            var data_info = backdata_info.Data;
+                                            data_info = JSON.parse(data_info);
+                                            if(data_info.length>0){
+                                                console.log(data_info);
+                                                var _html_info = '';
+                                                for (i in data_info) {
+                                                    _html_info += '<tr>' +
+                                                            '   <td style="width: 30%;color: #333;text-align: center">' + data_info[i].NAME + '</td>' +
+                                                            '   <td style="width: 70%;color: #333;text-align: center">' + data_info[i].CONTENT + '</td>' +
+                                                            '</tr>';
+                                                }
+                                                $('#yaopin_list_table').html(_html_info);
+                                            }else{
+                                                $('#yaopin_list_table').html('<div style="text-align: center">该药品没有详细信息</div>');
+                                            }
+
+                                        }else{
+                                            $('#yaopin_list_table').html('<div style="text-align: center">药品信息读取出错</div>');
+                                        }
+                                    }
+                                });
+
+
+
+                            });
+                        }else{
+                            $('#yaopin_list_table').html('<div style="text-align: center">没有对应数据</div>');
+                        }
+
+                    }
+                }
+            });
+        }
+    });
+
+    $('#open_app,#open_app2').on('click',function(){
+        Android.open_live_app();
+    });
+
+    //基础请求函数
+    function dmgc_ajax(obj) {
+        if (machine_token != "" && machine_code != "") {
+            obj.data.machine_code = machine_code;
+            obj.data.token = machine_token;
+            $.ajax({
+                type: obj.type ? obj.type : 'POST',
+                url: API_URL,
+                data: obj.data,
+                timeout: obj.timeout ? obj.timeout : '15000',
+                success: obj.success,
+                error: obj.error,
+                complete: function () {
+                    try {
+                        obj.complete()
+                    } catch (e) {
+                    }
+                }
+            });
+        }
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,3545 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dos自动售卖v1.0</title>
+    <link href="./amazeui/css/amazeui.min.css" rel="stylesheet" type="text/css"/>
+    <link href="http://at.alicdn.com/t/font_vo6rofq9q4sll3di.css" rel="stylesheet" type="text/css"/>
+    <style>
+        body, html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-size: 1em;
+			moz-user-select: -moz-none;
+			-moz-user-select: none;
+			-o-user-select:none;
+			-khtml-user-select:none;
+			-webkit-user-select:none;
+			-ms-user-select:none;
+			user-select:none;
+        }
+
+        .fl {
+            float: left
+        }
+
+        .fr {
+            float: right
+        }
+
+        .cf {
+            clear: both
+        }
+
+        .signal_active {
+            color: #FFF;
+        }
+
+        .signal_error {
+            color: lightcoral;
+        }
+
+        .btn_back,#btn_index2,#btn_type{
+            height: 80px;
+            padding: 0 20px;
+            border: 1px solid #FFF;
+            border-radius: 10px;
+            line-height: 80px;
+            text-align: center;
+            display: inline-block;
+            font-size: 0.8em;
+            color: #FFF;
+        }
+
+        .btn_yaopin {
+            height: 80px;
+            padding: 0 20px;
+            border: 1px solid lightseagreen;
+            border-radius: 10px;
+            line-height: 80px;
+            text-align: center;
+            display: inline-block;
+            font-size: 0.8em;
+            color: lightseagreen;
+        }
+
+        #header {
+            position: fixed;
+            width: 100%;
+            height: 100px;
+            left: 0;
+            right: 0;
+            top: 0;
+            background: rgb(68,165,174);
+            border-bottom: 1px solid #fff;
+            color: #FFF;
+            padding: 0 20px;
+        }
+
+        #header .header_info {
+            height: 100px;
+            line-height: 100px;
+            font-size: 2.5em;
+        }
+
+        #yaopin_box {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            bottom: 150px;
+            top: 100px;
+            background-size: 100%;
+            color: #fff;
+            z-index: 30;
+            background-color: rgba(255, 255, 255, 1);
+            border-bottom: 1px solid #b2e2fa;
+            overflow:scroll;
+        }
+
+        #check_temp_box {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            bottom: 150px;
+            top: 100px;
+            background-size: 100%;
+            color: #fff;
+            z-index: 30;
+            background-color: rgba(255, 255, 255, 1);
+            border-bottom: 1px solid #b2e2fa;
+        }
+
+        #player {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            bottom: 0px;
+            top: 100px;
+            background-size: 100%;
+            color: #fff;
+            z-index: 1000;
+            background-color: #000;
+        }
+
+        #my_ad_pic {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            bottom: 0px;
+            top: 100px;
+            background-size: 100%;
+            color: #fff;
+            z-index: 30;
+            background-color: #000;
+            overflow: hidden;
+        }
+
+        #mall {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            bottom: 150px;
+            top: 101px;
+            background: url("./images/mall_bg.jpg");
+            background-size: 100%;
+            color: #fff;
+            padding: 20px;
+            z-index: 10;
+            overflow-y: scroll;
+        }
+
+        #mall li {
+            width: 50%;
+            float: left;
+            list-style: none;
+            padding: 5px;
+        }
+
+        .cate_one {
+            height: 180px;
+            background: rgba(255, 255, 255, 0.6);
+            color: #fff;
+            text-align: center;
+            line-height: 180px;
+            border-radius: 4px;
+            font-size: 3em;
+        }
+
+        .goods_one {
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 2em;
+            overflow: hidden;
+            padding: 15px 0 10px 0;
+        }
+
+        .goods_one_pic {
+            text-align: center;
+        }
+
+        .goods_one_pic img {
+            max-width: 100%;
+        }
+
+        #show_goods {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            bottom: 150px;
+            top: 101px;
+            background: url("./images/mall_bg.jpg");
+            background-size: 100%;
+            color: #656565;
+            padding: 20px;
+            z-index: 11;
+            display: none;
+        }
+
+        #main_nav {
+            position: fixed;
+            height: 150px;
+            width: 100%;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgb(68,165,174);
+            color: #fff;
+            border-top: 2px solid lightseagreen;
+            z-index: 11;
+        }
+
+        .main_nav_one {
+            height: 150px;
+            width: 25%;
+            text-align: center;
+            line-height: 150px;
+            float: left;
+            margin: 0;
+            font-size: 2em;
+        }
+
+        #manager {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 101px;
+            background: url("./images/mall_bg.jpg");
+            background-size: 100%;
+            color: #fff;
+            padding: 20px;
+            z-index: 10;
+            color: #fff;
+            font-size: 1.8em;
+        }
+
+        .action_super {
+            display: none;
+        }
+
+        #manager .action_box {
+            width: 200px;
+            height: 200px;
+            line-height: 200px;
+            border-radius: 20px;
+            text-align: center;
+            background-color: rgba(32,178,170,0.8);
+            float: left;
+            margin: 0 20px 20px 0;
+            color: #fff;
+            z-index: 888;
+        }
+
+        .btn_close {
+            position: fixed;
+            left: 10%;
+            right: 10%;
+            bottom: 10%;
+            height: 120px;
+            line-height: 120px;
+            text-align: center;
+            background-color: rgba(32,178,170,0.8);
+            border-radius: 10px;
+            color: #FFF;
+        }
+
+        .admin_pass_btn, .user_pass_btn {
+            width: 100px;
+            height: 100px;
+            line-height: 100px;
+            border: 1px solid #eff0f1;
+            text-align: center;
+            float: left;
+            margin: 10px;
+            font-size: 22px;
+        }
+
+        #show_debug_channel {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 101px;
+            background: #000000;
+            background-size: 100%;
+            color: #fff;
+            padding: 20px;
+            z-index: 10;
+            color: #fff;
+            font-size: 1.8em;
+        }
+
+        .one_channel_btn {
+            display: inline-block;
+            background-color: #fff;
+            color: #666;
+
+            width: 9.5%;
+            text-align: center;
+            margin: 0 0.4% 5px 0;
+            height: 100px;
+            line-height: 100px;
+        }
+
+        .one_machine_btn {
+            height: 60px;
+            width: 100px;
+            margin-right: 10px;
+            background-color: lightseagreen;
+            color: #fff;
+            line-height: 60px;
+            text-align: center
+        }
+
+        .one_machine_btn_active {
+            background-color: lightcoral !important;
+        }
+        
+        #index2{
+        	width: 100%;
+        	height: 100%;
+        	background-color: #fff;
+        	position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 101px;
+            z-index: 500;
+        }
+        
+        #index2_btn_area{
+        	width: 100%;
+        	background: url("./images/mall_bg.jpg");
+            background-size: 100%;
+            padding: 1%;
+        }
+        
+        #index2_tips_area{
+        	padding: 5%;
+        	padding-top: 150px !important;
+        	color: rgb(64,171,162);
+        	font-size: 50px;
+        }
+        
+        .index2_btn{
+        	width: 45%;
+        	background: rgba(32,178,170,0.7);
+        	float: left;
+        	border-radius: 15px;
+        	font-weight: bold;
+        	text-align: center;
+        	font-size: 50px;
+        	color: #fff;
+        	margin: 2.5%;
+        }
+        
+        .index2_btn .iconfont{
+        	color: rgb(64,171,162);
+        	background-color: #fff;
+        	font-size: 150px;
+        	width: 65%;
+        	border-radius: 50%;
+        	margin: 5% auto;
+        }
+    	.cart_one_good_box,#cart_one_good{
+			height: 120px;
+			background-color: rgba(255,255,255,0.7);
+			font-size: 1.5em;
+			border-radius: 5px;
+			margin-top: 10px;
+			box-shadow: 0px 5px 10px darkgray;
+		} 
+		.cart_one_good{
+			float: left;
+			text-align: center;
+			line-height: 120px;
+		}
+		.cart_good_handle_btn{
+			color: #FFF;
+			border: 3px solid red;
+			padding: 10px 20px;
+			border-radius: 5px;
+			background-color: red;
+		}
+		.cart_good_handle_btn2{
+			color: #fff;
+			border: 3px solid rgb(64,171,162);
+			padding: 10px 20px;
+			border-radius: 5px;
+			background-color: rgb(64,171,162);
+			display: none;
+		}
+		.btn_disabled{
+			background-color: gray !important;
+			border-color: gray !important;
+		}
+		.number_btn{
+			float: left;
+			width: 100px;
+			height:100px;
+			border-radius: 50%;
+			line-height: 100px;
+			text-align: center;
+			color: #fff;
+			font-size: 2.5em;
+			border: 1px solid #fff;
+			margin: 20px 40px;
+			font-weight: bold;
+		}
+		.number_div_foc{
+			border-color: #23ABF0 !important;
+		}
+		#yaopin_list_table img{
+			margin-left: -2em;
+		}
+		.overflow_hidden{
+			overflow-y: hidden !important;
+		}
+    </style>
+</head>
+<body>
+<!--头部开始-->
+<div id="header">
+    <ul class="am-avg-sm-3">
+        <li style="width: 25% !important;">
+            <div class="header_info" style="text-align: left">
+                <div class="btn_back" style="margin-top: 10px;display: none">返回上级</div>
+                <div id="btn_index2" style="margin-top: 10px;">返回首页</div>
+                <div id="btn_type" style="margin-top: 10px;display: none">返回分类</div>
+            </div>
+        </li>
+        <li style="width: 50% !important;">
+            <div class="header_info" style="text-align: center">四川科伦智慧药房系统</div>
+        </li>
+        <li style="width: 25% !important;">
+            <div id="admin" class="header_info" style="text-align: right">
+                <span id="temperature" style="font-size:0.6em"></span>
+                <span id="signal" class="iconfont" style="font-size: 1.5em">&#xe66b;</span>
+            </div>
+        </li>
+    </ul>
+</div>
+<!--头部结束-->
+
+<!--广告页开始-->
+<div id="player" style="display: none">
+    <video id="my_video" width="100%" height="100%" autoplay="autoplay" poster="./images/player2.png"></video>
+    <div id="my_ad_pic" style="display: none;">
+        <img src="" width="100%" height="100%" style="margin: auto 0">
+    </div>
+</div>
+<!--广告页结束-->
+
+<!--首页开始-->
+<div id="index2" style="display: none;">
+	<div id="index2_btn_area">
+		<div>
+			<div id="go_buy2" class="index2_btn">
+				<div class="iconfont">&#xe647;</div>
+				<div>立即购药</div>
+			</div>
+			<div id="open_app2" class="index2_btn">
+				<div class="iconfont">&#xe657;</div>
+				<div>远程问诊</div>
+			</div>
+		</div>
+		<div>
+			<div id="btn_yaopin2" class="index2_btn">
+				<div class="iconfont">&#xe62a;</div>
+				<div>药品公众服务</div>
+			</div>
+			<div id="check_temp2" class="index2_btn">
+				<div class="iconfont">&#xe60b;</div>
+				<div>红外线测体温</div>
+			</div>
+		</div>				
+	</div>
+	<div id="index2_tips_area">　　四川科伦智慧药房系统是集自助购药、远程问诊、电子处方、人体参数测量、药品公众服务于一体，由绵阳市食品药品监督管理局监制的新型智慧药房系统，如需服务请点击屏幕上方服务窗口。</div>
+</div>
+<!--首页结束-->
+
+<!--提示开始-->
+<div id="show_tips" style="display: none">
+    <div style="position: fixed;height: 400px;width: 600px;line-height: 400px;text-align:center;top: 50%;left: 50%;margin: -200px 0 0 -300px;z-index: 9999;background-color: lightseagreen;color: #fff;border-radius: 10px;">
+        <div id="show_tips_str" style="font-size: 3.5em"></div>
+    </div>
+    <div id="count_down_div" style="position: fixed;color: #fff;font-size: 60px;bottom: 30%;left: 50%;width: 200px;margin-left: -100px;text-align: center;z-index: 100;"></div>
+    <div style="position: fixed;top: 101px;left: 0;right:0;bottom:150px;background-color: rgba(0,0,0,0.7);z-index: 14"></div>
+</div>
+<!--提示结束-->
+
+
+<!--药品查询开始-->
+<div id="yaopin_box" style="display:none;">
+	<style>
+		.finding_type{
+			width: 46%;
+			color: #fff;
+			border-radius: 10px;
+			height: 250px;
+			font-size: 3.5em;
+			text-align: center;
+			line-height: 250px;
+			float: left;
+			background-color: rgb(68,165,174);
+			margin: 2%;
+		}
+	</style>
+	<div id="finding_type_box" style="height: 100%;width: 100%;z-index: 15;position: absolute;top: 0px;left: 0px;background-color: #fff;">
+		<div class="finding_type" data-val="gcyp">国产药品</div>
+		<div class="finding_type" data-val="jkyp">进口药品</div>
+		<div class="finding_type" data-val="gcylqx">国产医疗器械</div>
+		<div class="finding_type" data-val="jkylqx">进口医疗器械</div>
+		<div class="finding_type" data-val="gcbjsp">国产保健食品</div>
+		<div class="finding_type" data-val="jkbjsp">进口保健食品</div>
+		<div class="finding_type" data-val="gchzp">国产化妆品</div>
+		<div class="finding_type" data-val="jkhzp">进口化妆品</div>
+		<div class="finding_type" data-val="wzlb">食药监动态</div>
+		<div class="finding_type" data-val="tousu">投诉举报</div>
+		<div style="clear: both;"></div>
+		<div style="width: 100%;text-align: center;color: rgb(68,165,174);font-size: 2.5em;">食品药品投诉举报电话 :12331</div>
+	</div>
+	<div id="tousu_box" style="height: 100%;width: 100%;z-index: 15;position: absolute;top: 0px;left: 0px;background-color: #fff;color: #000000;font-size: 2.5em;display: none;text-align: center;">
+		<form id="tousu_form" style="width: 80%;margin: 0px auto;">
+			<div style="margin-bottom: 50px;margin-top: 20px;padding-top: 100px;">
+				<div style="width: 35%;float: left;">投诉类别：</div>
+				<select id="tslb" name="tslb" style="width: 65%;float: left;">
+					<option value="1" style="font-size: 0.5em;">药品</option>
+					<option value="2" style="font-size: 0.5em;">医疗器械</option>
+					<option value="3" style="font-size: 0.5em;">化妆品</option>
+					<option value="4" style="font-size: 0.5em;">保健品</option>
+					<option value="5" style="font-size: 0.5em;">食品</option>
+				</select>
+				<div style="clear: both;"></div>
+			</div>
+			<div style="margin-bottom: 50px;margin-top: 20px;">
+				<div style="width: 35%;float: left;">投诉人姓名：</div>
+				<input id="xm" name="xm" placeholder="请输入姓名" style="width: 65%;float: left;">
+				<div style="clear: both;"></div>
+			</div>
+			<div style="margin-bottom: 50px;margin-top: 20px;">
+				<div style="width: 35%;float: left;">投诉人电话：</div>
+				<input id="lxdh" name="lxdh" placeholder="请输入联系电话" type="number" style="width: 65%;float: left;">
+				<div style="clear: both;"></div>
+			</div>
+			<div style="margin-bottom: 50px;margin-top: 20px;">
+				<div style="width: 35%;float: left;">投诉标题：</div>
+				<input id="tsjbbt" name="tsjbbt" placeholder="请输入投诉标题" style="width: 65%;float: left;">
+				<div style="clear: both;"></div>
+			</div>
+			<div style="margin-bottom: 50px;margin-top: 20px;">
+				<div style="width: 35%;float: left;">投诉内容：</div>
+				<textarea id="tsjbnr" name="tsjbnr" placeholder="请输入投诉内容" style="width: 65%;float: left;height: 500px;"></textarea>
+				<div style="clear: both;"></div>
+			</div>
+			<div style="margin-bottom: 50px;margin-top: 20px;">
+				<div style="width: 35%;float: left;">设备地点：</div>
+				<input id="tstj" name="tstj" placeholder="请输设备地点" style="width: 65%;float: left;">
+				<div style="clear: both;"></div>
+			</div>
+		</form>
+		<div>
+			<button id="tousu_submit" style="background-color: rgb(68,165,174);width: 200px;height: 80px;color: #fff;border: none;border-radius: 10px;">提交</button>
+			<button id="btn_type1" style="background-color: #999;width: 200px;height: 80px;color: #fff;border: none;border-radius: 10px;">取消</button>
+		</div>
+	</div>
+    <div style="padding: 30px 30px 0 30px;">
+    	<!--height: 100px;color: rgb(68,165,174);text-align: center;font-size: 2.0em;
+    	appearance:none;-moz-appearance:none;-webkit-appearance:none;
+    	background-image: url('./images/select_down.png');background-repeat: no-repeat;background-size: 50px;background-position: 220px 25px;padding-left: 20px;-->
+        <select id="yaopin_type" style="float: left;width: 0px;">
+        	<option style="font-size: 0.5em" value="gcyp">国产药品</option>
+        	<option style="font-size: 0.5em" value="jkyp">进口药品</option>
+        	<option style="font-size: 0.5em" value="gcylqx">国产医疗器械</option>
+        	<option style="font-size: 0.5em" value="jkylqx">进口医疗器械</option>
+        	<option style="font-size: 0.5em" value="gcbjsp">国产保健食品</option>
+        	<option style="font-size: 0.5em" value="jkbjsp">进口保健食品</option>
+        	<option style="font-size: 0.5em" value="gchzp">国产化妆品</option>
+        	<option style="font-size: 0.5em" value="jkhzp">进口化妆品</option>
+        	<option style="font-size: 0.5em" value="wzlb">食药监动态</option>
+        </select>
+        <div style="float: left;margin-left: 20px;width: 75%;border: 5px solid gray;">
+            <input id="yaopin_title" type="text" placeholder="请输入关键词" style="text-align:center;width:100%;height: 90px;line-height: 100px;padding: 0 20px;font-size: 1.8em;color: lightseagreen;">
+        </div>
+        <div style="float: right;margin-left: 20px;width: 20%">
+            <div id="yaopin_start" style="height: 100px;line-height: 100px;text-align: center;background-color: rgb(246,138,41);color: #fff;border-radius: 10px;font-size: 1.8em;">开始查询</div>
+        </div>
+        <div style="clear: both"></div>
+    </div>
+    <div style="margin-top:20px;padding: 10px 30px;color: #0c9c6e;font-size: 1.6em">
+        <style>
+            #yaopin_list_table {width: 100%}
+            #yaopin_list_table td{height: 30px;line-height: 30px;padding: 20px 0}
+        </style>
+        <table id="yaopin_list_table" border=1 bordercolor=#666666 style="border-collapse:collapse">
+
+        </table>
+    </div>
+    <div id="find_more_yaopin" data-page="1" style="width: 100%;color: #000;font-size: 1.5em;text-align: center;display: none;height: 50px;line-height: 50px;cursor: pointer;padding-bottom: 50px;">点击查看更多</div>
+    <div id="no_more_yaopin" style="width: 100%;color: #000;font-size: 1.5em;text-align: center;display: none;padding-bottom: 50px;">没有更多</div>
+</div>
+<!--药品查询结束-->
+
+<!--红外测体温开始-->
+<div id="check_temp_box" style="display: none">
+    <div id="show_temp_num" style="margin: 180px auto 30px auto;text-align: center"></div>
+    <div style="text-align: center;font-size: 2em;color: #000000;">请用额头覆盖体温传感器</div>
+    <div style="text-align: center;font-size: 1.5em;width: 640px;margin: 30px auto 0 auto">
+        <div style="display: inline-block;height: 80px;width: 160px;line-height: 80px;background-color: #515151;float: left">
+            读取异常
+        </div>
+        <div style="display: inline-block;height: 80px;width: 160px;line-height: 80px;background-color: #30e60d;float: left">
+            正常体温
+        </div>
+        <div style="display: inline-block;height: 80px;width: 160px;line-height: 80px;background-color: #dd730b;float: left">
+            发烧
+        </div>
+        <div style="display: inline-block;height: 80px;width: 160px;line-height: 80px;background-color: #e91c1c;float: left">
+            高烧
+        </div>
+    </div>
+    <div class="cf"></div>
+    <div id="start_check_temp"
+         style="width: 500px;height: 150px;line-height: 150px;font-size: 2em;margin: 80px auto;text-align: center;background-color: lightseagreen;color: #fff;border-radius: 5px;">
+       	 点击开始检测
+    </div>
+</div>
+<!--红外测体温结束-->
+
+<!--查询药品窗口开始-->
+<div id="find_goods_box" style="display: none;">
+	<div style="display: block;z-index: 109;position: fixed;width: 650px;height: 300px;background-color: #fff;top: 0px;left: 0px;right: 0px;bottom: 0px;margin:auto;border-radius: 5px;">
+		<div style="width: 100%;font-size: 2.5em;text-align: center;background-color: rgb(32,178,170);color: #fff;border-radius: 5px 5px 0px 0px;">查找药品</div>
+		<div style="margin-left: 50px;margin-top: 20px;">
+			<div id="cabinet_position" class="find_number_div" style="text-align:center;height: 60px;border-radius: 5px;background-color: #fff;margin-top: 10px;margin-bottom:50px;border: 3px solid lightgray;width: 200px;font-size: 2.5em;float: left;"/></div>
+			<span style="color: #000;font-size: 2.5em;line-height: 80px;float: left;">柜</span>
+			<div id="goods_position" class="find_number_div" style="text-align:center;height: 60px;border-radius: 5px;background-color: #fff;margin-top: 10px;border: 3px solid lightgray;width: 200px;font-size: 2.5em;float: left;"/></div>
+			<span style="color: #000;font-size: 2.5em;line-height: 80px;float: left;">货道</span>
+		</div>
+		<div style="width: 85%;margin: 0px auto;">
+			<button onclick="find_goods_by_position();" style="background-color: #fff;background-color: rgb(32,178,170);color: #fff;border: 3px solid rgb(32,178,170);border-radius: 5px;height: 60px;width: 100%;font-size: 1.7em;">
+				<span class="iconfont" style="font-size: 1.1em;">&#xe62a;</span> <span>查询</span>
+			</button>
+		</div>
+	</div>
+	<div style="position: absolute;z-index: 109;width: 540px;margin: 0px auto;text-align: center;bottom: 200px;left: 50%;margin-left: -270px;">
+		<div style="width: 540px;margin: 0px auto;">
+			<div class="number_btn num_click">7</div>
+			<div class="number_btn num_click">8</div>
+			<div class="number_btn num_click">9</div>
+			<div style="clear: both;"></div>
+		</div>
+		<div style="width: 540px;margin: 0px auto;">
+			<div class="number_btn num_click">4</div>
+			<div class="number_btn num_click">5</div>
+			<div class="number_btn num_click">6</div>
+			<div style="clear: both;"></div>
+		</div>
+		<div style="width: 540px;margin: 0px auto;">
+			<div class="number_btn num_click">1</div>
+			<div class="number_btn num_click">2</div>
+			<div class="number_btn num_click">3</div>
+			<div style="clear: both;"></div>
+		</div>
+		<div style="width: 540px;margin: 0px auto;">
+			<div class="number_btn num_close iconfont">&#xe65d;</div>
+			<div class="number_btn num_click">0</div>
+			<div class="number_btn num_del iconfont">&#xe67c;</div>
+			<div style="clear: both;"></div>
+		</div>
+	</div>
+	<div id="find_goods_cover" style="position: fixed;top: 101px;left: 0;right:0;bottom:150px;background-color: rgba(0,0,0,0.7);z-index: 14"></div>
+</div>
+<!--查询药品窗口结束-->
+
+<!--提货码取方开始-->
+<div id="get_prescription_box" style="display: none;">
+	<div style="display: block;z-index: 9999;position: fixed;width: 650px;height: 300px;background-color: #fff;top: 0px;left: 0px;right: 0px;bottom: 0px;margin: auto;border-radius: 5px;">
+		<div style="width: 100%;font-size: 2.5em;text-align: center;background-color: rgb(32,178,170);color: #fff;border-radius: 5px 5px 0px 0px;">输入提货码</div>
+		<div style="margin-left: 150px;margin-top: 40px;">
+			<span style="font-size: 1.8em;">提货码：</span>
+			<input id="prescription_code" style="width: 200px;height: 50px;border: 3px solid lightgray;border-radius: 5px;font-size: 1.8em;margin-top: -10px;text-align: center;" type="tel" maxlength="6"/>
+		</div>
+		<div style="width: 85%;margin: 30px auto;">
+			<button onclick="get_prescription_by_code();" style="background-color: #fff;background-color: rgb(32,178,170);color: #fff;border: 3px solid rgb(32,178,170);border-radius: 5px;height: 60px;width: 100%;font-size: 1.7em;">
+				<span class="iconfont" style="font-size: 1.1em;">&#xe62a;</span> <span>获取药方</span>
+			</button>
+		</div>
+	</div>
+	<div id="get_prescription_cover" style="position: fixed;top: 101px;left: 0;right:0;bottom:150px;background-color: rgba(0,0,0,0.7);z-index: 14"></div>
+</div>
+<!--提货码取方结束-->
+
+<!--购物车logo开始-->
+<div id="shopping_cart_logo" style="position: fixed;right: 50px;bottom: 200px;width: 150px;height: 150px;border-radius: 50%;background-color: yellow;z-index: 11;">
+	<div style="color: #000000;font-size: 5em;text-align: center;line-height: 150px;margin-top: 5px;margin-left: -5px;" class="iconfont" >&#xe647;</div>
+	<div id="shopping_cart_num" style="width: 50px;height: 50px;color: #fff;position: absolute;right: 0px;top: 0px;background-color: red;border-radius: 50%;text-align: center;line-height: 50px;font-size: 2.5em;">0</div>
+</div>
+<!--购物车logo结束-->
+
+<!--分类、商品展示页开始-->
+<div id="mall">
+	<!--查找药品按钮开始-->
+	<div id="find_goods_btn" style="width: 49%;height: 80px;background-color: #fff;opacity: 0.7;border-radius: 5px;margin: -10px 0px 5px 0px;float: left;">
+		<div style="color: rgb(32,178,170);font-size: 2.5em;width: 100%;text-align: center;line-height: 80px;">按位置查找药品</div>
+	</div>
+	<!--查找药品按钮结束-->
+	<!--取方号按钮开始-->
+	<div id="find_goods_btn" style="width: 49%;height: 80px;background-color: #fff;opacity: 0.7;border-radius: 5px;margin: -10px 0px 5px 0px;float: right;">
+		<div id="get_prescription" style="color: rgb(32,178,170);font-size: 2.5em;width: 100%;text-align: center;line-height: 80px;">处方号取方</div>
+	</div>
+	<!--取方号按钮结束-->
+
+	<!--分类菜单开始-->
+    <div id="cate_list"></div>
+    <!--商品展示开始-->
+    <div id="goods_list"></div>
+    <!--商品详情开始-->
+    <div id="show_goods">
+    	
+    	<!--等待视图开始-->
+        <div id="show_goods_loading" style="display: none">
+            <div style="position: fixed;height: 400px;width: 400px;top: 50%;left: 50%;margin: -200px 0 0 -200px;z-index: 15">
+                <img src="./images/loading_1.gif" width="400" height="400" style="border-radius: 200px;">
+            </div>
+            <div style="position: fixed;top: 101px;left: 0;right:0;bottom:150px;background-color: rgba(0,0,0,0.7);z-index: 14"></div>
+        </div>
+    	<!--等待视图结束-->
+
+		<!--普通商品信息-->
+		<div id="normal_goods" style="display: block;">
+			<div style="margin: 20px 0;text-align: center;position: relative;">
+            <img id="show_goods_pic" src="" width="500" height="500">
+            <img id="rx_full_img" src="images/rx_type_full.png" style="width: 100px;height: 100px;position: absolute;bottom: 0px;margin-left: 10px;opacity: 0;">
+	        </div>
+			<div id="cart_div" style="position:absolute;right:50px;top:650px;text-align: center;border-radius: 50%;width: 100px;height: 100px;background-color: rgb(68,165,174);">
+				<div onclick="add_to_cart(this);" class="iconfont" style="color:#fff;font-size:80px;margin-top: -10px;" data-goods_id="'+ item['goods_id'] +'">&#xe622;</div>
+			</div>
+	        <div id="show_goods_title" style="text-align: center;font-size: 2.5em;line-height: 80px;"></div>
+	        <div id="show_goods_spec" style="text-align: center;font-size: 1.5em;line-height: 40px;"></div>
+	        <div id="show_goods_price" style="text-align: center;font-size: 2em;line-height: 50px;color: red;"></div>
+	        <div style="text-align: center;font-size: 2em;line-height: 50px;margin-top: 20px;">付款后将从【<span id="show_goods_channel"></span>】出货</div>
+	        <div id="show_goods_desc" style="font-size: 1.5em;padding: 0 50px;"></div>
+		</div>
+		<!--普通商品结束-->
+		
+		<!--购物车商品开始-->
+		<div id="shopping_cart_box" style="display: none;width: 100%;">
+			<button id="cart_back_index" style="border: 3px solid rgb(32,178,170);color: rgb(32,178,170);border-radius: 5px;padding: 10px 20px;background-color: rgba(255,255,255,0);font-size: 1.5em;margin: 10px;" onclick="back_to_index();">返回分类页</button>
+			<button id="clean_shopping_cart" style="border: 3px solid red;color: red;border-radius: 5px;padding: 10px 20px;background-color: rgba(255,255,255,0);font-size: 1.5em;margin: 10px;" onclick="clean_shopping_cart();">清空购物车</button>
+			<div style="width: 100%;background-color: rgba(255,255,255,0.7);color: #000;font-size: 1.5em;height: 50px;border-radius: 5px;margin-top: 10px;box-shadow: 0px 5px 10px darkgray;">
+				<div style="width: 30%;float: left;text-align: center;line-height: 50px;">名称</div>
+				<div style="width: 20%;float: left;text-align: center;line-height: 50px;">图片</div>
+				<div style="width: 15%;float: left;text-align: center;line-height: 50px;">单价</div>
+				<div style="width: 10%;float: left;text-align: center;line-height: 50px;">数量</div>
+				<div style="width: 20%;float: left;text-align: center;line-height: 50px;">操作</div>
+			</div>
+			<div style="clear: both;"></div>
+			<div id="cart_goods_list" class="hide_scroll" style="widows: 100%;height: 900px;overflow:inherit;overflow-y: auto;overflow-x: hidden;"></div>
+		</div>
+		<!--购物车商品结束-->	
+        
+        <!--支付窗口开始-->
+        <div id="pay_type_box" style="text-align: center;background-color: rgba(255,255,255,1);position: fixed;z-index:600;bottom: 150px;left: 0;right: 0;height: 450px;padding: 30px 0;display: none;">
+            <div class="fl" style="width: 50%">
+                <div id="qr_wechat"></div>
+                <div>
+                    <img src="./images/wechat_logo_v2.png" height="100px">
+                </div>
+            </div>
+            <div class="fl" style="width: 33%;display: none;">
+                <div id="cash_pay">
+                    <img src="./images/pay_money.png" height="400px">
+                </div>
+            </div>
+            <div class="fl" style="width: 50%">
+                <div id="qr_alipay" style=""></div>
+                <div>
+                    <img src="./images/alipay_logo_v2.png" height="100px">
+                </div>
+            </div>
+            <div class="cf"></div>
+        </div>
+        <!--支付窗口结束-->
+        
+        <!--审核窗口开始-->
+        <div id="goods_examine_box" style="text-align: center;background-color: rgba(255,255,255,1);position: fixed;bottom: 150px;left: 0;right: 0;height: 450px;line-height:450px;display: none;">
+        	<div id="wait_examine_box" style="font-size: 35px;color: rgb(35,178,170);display: none;"><span class="iconfont" style="font-size: 50px;">&#xe6d7;</span>等待审核...</div>
+        	<div id="examine_success_box" style="font-size: 35px;color: rgb(35,178,170);display: none;"><span class="iconfont" style="font-size: 50px;">&#xe6d5;</span>审核成功</div>
+        	<div id="examine_fail_box" style="font-size: 35px;color: rgb(35,178,170);display: none;">
+        		<div style="line-height: 40px;margin-top: 205px;"><span class="iconfont" style="font-size: 50px;">&#xe6d6;</span>审核失败</div>
+        		<div id="fail_reson" style="font-size: 20px;color: red;line-height: 40px;"></div>
+        	</div>
+        	<div id="sure_examine_box">
+        		<div id="sure_examine_btn" style="background: rgb(35,178,170);border-radius: 15px;width: 500px;height: 200px;text-align: center;color: #fff;font-size: 80px;font-weight: bold;line-height: 200px;margin: 50px auto;">
+        			立即购药
+        		</div>
+        		<div style="font-size: 20px;color: red;line-height: 40px;">提示：此药品需凭处方购买，请点击“咨询医生”获取处方。</div>
+        	</div>
+        </div>
+        <!--审核窗口结束-->
+        
+		<!--购物车确认支付开始-->
+        <div id="cart_sure_pay" style="text-align: center;background-color: rgba(255,255,255,1);position: fixed;bottom: 150px;left: 0;right: 0;height: 100px;display: none;">
+    		<button onclick="shopping_cart_pay();" id="cart_sure_pay_btn" style="color:#fff;background-color: rgb(35,178,170);border-radius: 5px;border:none;padding: 20px 40px;font-size: 1.5em;float: right;margin-top: 10px;margin-right: 15px;">
+    			确认购药
+    		</button>
+    		<div style="float: right;line-height: 100px;font-size: 1.5em;color: #000;margin: 0px 20px;">商品总价：
+    			<span id="cart_total_money"></span>元
+    		</div>
+    		<div style="float: right;line-height: 100px;font-size: 1.5em;color: #000;margin: 0px 20px;">商品总量：
+    			<span id="cart_total_num"></span>件
+    		</div>
+		</div>
+		<!--购物车确认支付结束-->
+        
+        <div id="show_cash_pay" style="position: fixed;top:0;left:0;right:0px;bottom:0px;z-index: 1000;display:none;width:100%;background: rgba(0,0,0,0.8);">
+            <div style="background: #ffffff;color:#333;font-size: 14px;width: 400px;height: 244px;left: 50%;margin-left: -200px;bottom: 50%;margin-bottom:-100px;position: fixed;border-radius: 5px;">
+                <div style="text-align:center;font-size: 22px;line-height: 60px;height: 60px;">现金支付</div>
+                <div style="font-size: 14px;color: #666666;line-height: 25px;height: 25px;margin-bottom: 5px;text-align:center">
+                    请投入：1元硬币；1元、5元、10元、20元、50元纸币
+                </div>
+                <div style="text-align: left;font-size: 18px;padding-left: 132px;margin-bottom: 10px;">
+                    应付金额：<span class="cash_need_pay">0</span> 元
+                    <br>
+                    实付金额：<span class="cash_payed">0</span> 元
+                    <br>
+                    应退金额：<span class="cash_need_return">0</span>元
+                </div>
+                <div id="close_cash_pay" style="height: 60px;background: #0c9c6e;color: #fff;text-align: center;border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;">
+                    <div style="font-size: 16px;line-height: 40px">放弃使用现金交易</div>
+                    <div style="font-size: 10px;line-height: 10px;">注意:放弃后已付现金将以硬币形式退还！</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="cash_show" style="display:none;position: fixed;bottom: 180px;width: 180px;height: 50px;line-height: 50px;left: 50%;margin-left: -90px;background: lightseagreen;color: #fff;text-align: center"></div>
+</div>
+
+<!--底部菜单开始-->
+<div id="main_nav">
+    <!--<div style="position: absolute;top: -1px;left:50%;margin-left:-80px;height: 24px;width: 160px;text-align: center;line-height: 24px;background-color: lightseagreen;color: #fff;">
+        请选择功能
+    </div>-->
+    <div id="go_buy" class="main_nav_one" style="color: #FFF">
+        <span class="iconfont" style="font-size: 1.5em;">&#xe604;</span>
+        <span>自助购药</span>
+    </div>
+    <div id="open_app" class="main_nav_one" style="color: #FFF">
+        <span class="iconfont" style="font-size: 1.5em;">&#xe657;</span>
+        <span>远程问诊</span>
+    </div>
+        <div id="btn_yaopin" class="main_nav_one" style="color: #FFF">
+        <span class="iconfont" style="font-size: 1.5em;">&#xe6e1;</span>
+        <span>药品公众服务</span>
+    </div>
+    <div id="check_temp" class="main_nav_one" style="color: #FFF">
+        <span class="iconfont" style="font-size: 1.5em;">&#xe60b;</span>
+        <span>红外线测体温</span>
+    </div>
+</div>
+<!--底部菜单结束-->
+
+<!--系统管理开始-->
+<div id="admin_login"
+     style="position: fixed;top: 0;left: 0;right: 0;bottom: 0;background-color: rgba(0,0,0,0.9);display: none;z-index: 888">
+    <div id="admin_login_box"
+         style="position:absolute;top:50%;left:50%;margin:-280px 0 0 -250px;color:#333;width: 500px;height: 500px;background-color: #fff;border-radius: 5px; ">
+        <div style="height: 60px;line-height: 60px;text-align: center;font-size: 18px;">
+            系统管理
+        </div>
+        <div style="padding:10px 30px;">
+            <input id="admin_password" type="password"
+                   style="height: 50px;line-height: 50px;border: none;background-color: #eff0f1;text-align: center;width: 100%;font-size: 30px;">
+        </div>
+        <div style="margin: 0 0 0 10px">
+            <div class="admin_pass_btn" data-num="1">1</div>
+            <div class="admin_pass_btn" data-num="2">2</div>
+            <div class="admin_pass_btn" data-num="3">3</div>
+            <div class="admin_pass_btn" data-num="4">4</div>
+            <div class="admin_pass_btn" data-num="5">5</div>
+            <div class="admin_pass_btn" data-num="6">6</div>
+            <div class="admin_pass_btn" data-num="7">7</div>
+            <div class="admin_pass_btn" data-num="8">8</div>
+            <div class="admin_pass_btn" data-num="9">9</div>
+            <div class="admin_pass_btn" data-num="0">0</div>
+            <div id="admin_pass_delete" class="admin_pass_btn">删除</div>
+            <div id="admin_pass_sure" class="admin_pass_btn">确认</div>
+        </div>
+    </div>
+    <div id="admin_login_close"
+         style="position:absolute;top:50%;left:50%;margin:270px 0 0 -50px;text-align: center;line-height:100px;color:#fff;width: 100px;height: 100px;background-color: lightseagreen;border-radius: 50px; ">
+        关闭
+    </div>
+</div>
+
+<div id="manager" style="display: none">
+    <div id="user_config_change_goods" class="action_box">补换货</div>
+    <div id="restart_app" class="action_box">重启应用</div>
+    <div id="error_is_ok" class="action_box">恢复异常</div>
+    <div id="open_supper" class="action_box">超级管理</div>
+
+    <div id="go_back_manager" class="action_box action_super">返回</div>
+    <div id="test_channel" class="action_box action_super">货道测试</div>
+    <div id="set_token" class="action_box action_super">通讯设置</div>
+    <div id="shipment" class="action_box action_super">出货设置</div>
+    <div id="introduction" class="action_box action_super">简介设置</div>
+    <div id="set_tiwen" class="action_box action_super">体温补偿</div>
+    <div id="close_app" class="action_box action_super">关闭应用</div>
+
+
+    <div id="set_machine_box"
+         style="display:none;position: fixed;height: 520px;width: 400px;top:50%;left: 50%;margin: -260px 0 0 -200px;background-color: #fff;border-radius: 10px;padding: 20px;">
+        <div style="height: 50px;line-height: 50px;text-align: center;color: #333">
+            通讯设置
+        </div>
+        <div style="margin: 20px 0;">
+            <input id="set_machine_code" placeholder="机器编码" type="text"
+                   style="color:#333;height: 50px;line-height: 50px;border: none;background-color: #eff0f1;text-align: center;width: 100%;font-size: 30px;">
+        </div>
+        <div style="margin: 20px 0;">
+            <input id="set_machine_token" placeholder="通讯token" type="text"
+                   style="color:#333;height: 50px;line-height: 50px;border: none;background-color: #eff0f1;text-align: center;width: 100%;font-size: 30px;">
+        </div>
+        <div style="margin: 20px 0;">
+            <select id="set_machine_num" style="color:#333;height: 50px;line-height: 50px;border: none;background-color: #eff0f1;text-align: center;width: 100%;font-size: 30px;">
+                <option value="1">1个柜</option>
+                <option value="2">2个柜</option>
+                <option value="3">3个柜</option>
+                <option value="4">4个柜</option>
+            </select>
+        </div>
+
+        <div id="set_machine_ok"
+             style="height: 80px;line-height: 80px;text-align: center;border-radius: 10px;background-color: lightseagreen;color: #fff;">
+            确认保存
+        </div>
+        <div id="set_machine_cancel"
+             style="margin-top:30px;height: 80px;line-height: 80px;text-align: center;border-radius: 10px;background-color: lightcoral;color: #fff;">
+            取消操作
+        </div>
+    </div>
+
+    <div id="set_tiwen_box"
+         style="display:none;position: fixed;height: 380px;width: 400px;top:50%;left: 50%;margin: -190px 0 0 -200px;background-color: #fff;border-radius: 10px;padding: 20px;">
+        <div style="height: 50px;line-height: 50px;text-align: center;color: #333">
+            体温补偿设置
+        </div>
+        <div style="margin: 20px 0;">
+            <input id="set_tiwen_plus" placeholder="请设置数值" type="number"
+                   style="color:#333;height: 50px;line-height: 50px;border: none;background-color: #eff0f1;text-align: center;width: 100%;font-size: 30px;">
+        </div>
+        <div id="set_tiwen_ok"
+             style="height: 80px;line-height: 80px;text-align: center;border-radius: 10px;background-color: lightseagreen;color: #fff;">
+            确认保存
+        </div>
+        <div onclick="$('#set_tiwen_box').hide();" style="margin-top:30px;height: 80px;line-height: 80px;text-align: center;border-radius: 10px;background-color: lightcoral;color: #fff;">
+            取消操作
+        </div>
+    </div>
+    
+    <div id="shipment_box"
+         style="display:none;position: fixed;height: 380px;width: 400px;top:50%;left: 50%;margin: -190px 0 0 -200px;background-color: #fff;border-radius: 10px;padding: 20px;">
+        <div style="height: 50px;line-height: 50px;text-align: center;color: #333">
+            自动出货设置
+        </div>
+        <div style="margin: 20px 0;">
+            <input id="shipment_plus" placeholder="请设置数值" type="number"
+                   style="color:#333;height: 50px;line-height: 50px;border: none;background-color: #eff0f1;text-align: center;width: 100%;font-size: 30px;">
+        </div>
+        <div id="shipment_ok"
+             style="height: 80px;line-height: 80px;text-align: center;border-radius: 10px;background-color: lightseagreen;color: #fff;">
+            确认保存
+        </div>
+        <div onclick="$('#shipment_box').hide();" style="margin-top:30px;height: 80px;line-height: 80px;text-align: center;border-radius: 10px;background-color: lightcoral;color: #fff;">
+            取消操作
+        </div>
+    </div>
+    
+    <div id="introduction_box"
+         style="display:none;position: fixed;width: 600px;height:660px;top:0px;left:0px;right:0px;bottom:0px;margin:auto;background-color: #fff;border-radius: 10px;padding: 20px;">
+        <div style="height: 50px;line-height: 50px;text-align: center;color: #333">
+            	简介设置
+        </div>
+        <div style="margin: 20px 0;">
+        	<textarea id="introduction_plus" placeholder="输入简介" style="color:#333;height:300px;border:none;background-color:#eff0f1;width:100%;font-size:30px;"></textarea>
+        </div>
+        <div id="introduction_ok"
+             style="height: 80px;line-height: 80px;text-align: center;border-radius: 10px;background-color: lightseagreen;color: #fff;">
+            	确认保存
+        </div>
+        <div onclick="$('#introduction_box').hide();" style="margin-top:30px;height: 80px;line-height: 80px;text-align: center;border-radius: 10px;background-color: lightcoral;color: #fff;">
+            	取消操作
+        </div>
+    </div>
+
+
+    <div id="user_config_fixed_box"
+         style="display:none;position:absolute;top:50%;left:50%;margin:-120px 0 0 -250px;padding: 20px;color:#333;width: 500px;height: 240px;background-color: #fff;border-radius: 5px; ">
+        <div style="text-align: center;height: 120px;line-height: 120px;font-size: 0.6em">
+            确认机器故障已经完成排除，可以正常销售？
+        </div>
+        <div style="text-align: center">
+            <span id="user_config_fixed_sure"
+                  style="padding: 20px 50px;background-color: #0c9c6e;color: #fff;margin-right: 40px;border-radius: 3px;">确认</span>
+            <span style="padding: 20px 50px;background-color: #efefef;border-radius: 3px;"
+                  onclick="$('#user_config_fixed_box').hide();">取消</span>
+        </div>
+    </div>
+
+    <div id="user_config_change_goods_box"
+         style="display:none;position:fixed;top:101px;bottom:0;left:0;right:0;padding: 20px;color:#333;background-color: #999;z-index: 2000">
+        <div style="height: 100%;overflow-y: scroll;">
+            <table id="user_config_change_goods_list" style="width: 100%"></table>
+        </div>
+        <div style="position:fixed;bottom:220px;left:10%;right:10%;z-index: 99999">
+            <div id="user_config_change_goods_close"
+                 style="background-color: rgba(255,255,255,0.8);color: lightseagreen;width:100%;height: 80px;line-height: 80px;text-align: center;border-radius: 10px;">
+                关闭补换货界面
+            </div>
+        </div>
+        <style>
+            #user_config_change_goods_box td {
+                width: 25%;
+                text-align: center;
+                height: 80px;
+                line-height: 80px;
+                margin: 10px 0;
+            }
+        </style>
+
+
+        <div id="user_config_change_goods_sure_box"
+             style="display:none;position:fixed;top:101px;left:10px;bottom: 10px;right:10px;padding: 20px;color:#333;background-color: #fff;border-radius: 5px; ">
+            <div style="height: 450px;overflow-y: scroll;">
+                <table id="user_config_change_goods_sure_list"
+                       style="width: 100%;height: 100%;overflow-y: scroll"></table>
+            </div>
+            <div id="user_config_change_goods_sure_btn"
+                 style="margin-top: 10px;background-color: #0c9c6e;color: #fff;height: 80px;line-height: 80px;text-align: center;">
+                确认补货已完成
+            </div>
+            <div id="user_config_change_goods_sure_close"
+                 style="margin-top: 10px;background-color: #5a5a58;color: #fff;height: 80px;line-height: 80px;text-align: center;">
+                关闭
+            </div>
+            <style>
+                #user_config_change_goods_sure_box td {
+                    width: 10%;
+                    text-align: center;
+                    height: 55px;
+                    line-height: 55px;
+                    font-size: 10px;
+                }
+            </style>
+        </div>
+
+        <div id="user_config_change_goods_comfirm_box"
+             style="display:none;position:absolute;top:50%;left:50%;margin:-120px 0 0 -250px;padding: 20px;color:#333;width: 500px;height: 240px;background-color: #fff;border-radius: 5px;">
+            <input type="hidden" id="apply_order_id" value="0">
+            <div style="text-align: center;height: 150px;line-height: 150px;color: red">
+                确认该次补&换货已经全部完成？
+            </div>
+            <div style="text-align: center">
+                <span id="user_config_change_goods_comfirm_sure"
+                      style="padding: 20px 50px;background-color: #0c9c6e;color: #fff;margin-right: 40px;border-radius: 3px;">确认</span>
+                <span style="padding: 20px 50px;background-color: #efefef;border-radius: 3px;"
+                      onclick="$('#user_config_change_goods_comfirm_box').hide();">取消</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="close_manager" class="btn_close">关闭界面</div>
+</div>
+
+<div id="show_debug_channel" style="display: none">
+
+    <div style="margin:0 0 20px 0">
+        <div data-machine_id="1" class="fl one_machine_btn one_machine_btn_active">1柜</div>
+        <div data-machine_id="2" class="fl one_machine_btn">2柜</div>
+        <div data-machine_id="3" class="fl one_machine_btn">3柜</div>
+        <div data-machine_id="4" class="fl one_machine_btn">4柜</div>
+        <div class="cf"></div>
+    </div>
+
+    <div id="debug_all_channel"
+         style="height: 80px;line-height: 80px;text-align: center;background-color: #fff;border-radius: 10px;color: #333">
+        全货道检测
+    </div>
+
+    <div style="height: 50px;line-height: 50px;text-align: center;font-size: 0.8em">↓单货道检测，点击货道测试↓</div>
+
+    <div id="debug_channel_list" style="margin-top: 20px;height: 100%;overflow-y: scroll;padding-bottom: 800px;"></div>
+    <div class="btn_close" onclick="show_take_godds = 1;is_debug_channel=false;$('#show_debug_channel').hide();">关闭货道检测</div>
+</div>
+
+<div id="machine_msg"
+     style="font-size: 3.5em;height: 400px;width: 600px;line-height: 400px;text-align:center;position: fixed;top: 50%;left: 50%;margin: -200px 0 0 -300px;color: #fff;background: lightseagreen;border-radius: 5px;z-index: 10000;display: none;border-radius: 10px;"></div>
+<div id="machine_msg_bg"
+     style="position: fixed;top:0;right: 0;bottom: 0;left: 0;background: rgba(0,0,0,0.5);z-index: 10000;display: none"></div>
+
+<script src="./js/jquery.js"></script>
+<script src="./qrcode/jquery.qrcode.js"></script>
+<script src="./qrcode/qrcode.js"></script>
+<script src="./check_temp/js/radialIndicator.js"></script>
+<script>
+
+    var API_URL = "http://klzhyf.com/machine/api/index/";
+    /**edit by lengjianghua **/
+    var CASH_PAY_NOTIFY_URL = "http://klzhyf.com/machine/payment/cash_notify/";
+    var need_notice=false;//是否要检测现金交易
+    var cash_notice_num = 0;
+    /**end of edit**/
+    var IMAGE_DOMAIN = "http://auto-yin.oss-cn-shenzhen.aliyuncs.com/";
+    var machine_code = window.localStorage.getItem("machine_code");
+    var machine_token = window.localStorage.getItem("machine_token");
+    var machine_num = window.localStorage.getItem("machine_num");
+    //var machine_num = 1;
+    machine_num = (machine_num>0)?machine_num:1;
+	var shopping_cart = [];
+    var goods_cate; //产品类别数据
+    var goods_list; //产品数据
+    var ad_list; //要播放的广告列表
+    var ad_list_temp = []; //当前在播放的临时广告列表
+    var ad_list_down; //广告下载列表
+    var now_cate_pid = 0;
+    var up_cate_pid = 0;
+    var time_heart = 30 * 1000;
+    var time_goods = 300 * 1000; //300秒同步一次产品
+    var time_ad = 300 * 1000; //80秒同步一次广告
+    var no_action_time_limit = 600; //600秒无操作开始播放广告
+　  	var no_action_time_index2 = 120; //120秒无操作显示首页
+    var timer_check_pay; //检测支付状态timer
+    var show_take_godds =1; //显示请取走货品提示
+    var tiwen_plus = window.localStorage.getItem("tiwen_plus")?window.localStorage.getItem("tiwen_plus"):0;
+    var shipment_plus = window.localStorage.getItem("shipment_plus")?window.localStorage.getItem("shipment_plus"):1;
+    var index2_tips = "　　四川科伦智慧药房系统是集自助购药、远程问诊、电子处方、人体参数测量、药品公众服务于一体，由绵阳市食品药品监督管理局监制的新型智慧药房系统，如需服务请点击屏幕上方服务窗口。";
+    var introduction_plus = window.localStorage.getItem("introduction_plus")?window.localStorage.getItem("introduction_plus"):index2_tips;
+    $("#index2_tips_area").html(introduction_plus);
+    $("#introduction_plus").val(introduction_plus);
+	var now_payed_order_info;
+    var now_pay_order_no = 0; //当前正在支付的订单号
+    var now_pay_order_channelId = 0; //当前正在支付的订单的出货货道编号
+    var is_debug_channel = false;  //是否在调试货道
+    var timer_temperature;
+    var timer_goods;
+    var timer_heart;
+    var timer_ad;
+    var is_playing = false; //是否在播放
+    var now_play_num = 0; //当前播放的index
+    var videoPlayTimer; //视频播放计时器
+    var timer1;
+    var lockTimer;
+    var color_arr = ['#F8ABAD','#F8A649','#D2E287','#C6C4E1','#8DD7F7','#9AD2AE','#99CCFF','#90EE90'];
+
+	apiready = function () {
+		init_index2();
+	    try{
+	        Android.machine_open("ttyUSB1", machine_num*1); //启动货柜控制板
+	    }catch (e){}
+	
+	    try{
+	        get_online_heart();
+	        get_goods();
+	        get_ad_list();
+	        timer_goods = setInterval(function () {
+	            get_goods();
+	        }, time_goods);
+	        timer_heart = setInterval(function () {
+	            get_online_heart();
+	        }, time_heart);
+	        timer_ad = setInterval(function () {
+	            get_ad_list();
+	        }, time_ad);
+	    }catch (e){}
+	};
+	
+	
+    function init_index2(){
+    	var index2_btn_area_width = $(document).width();
+		$("#index2_btn_area").height(index2_btn_area_width);
+		$(".index2_btn").height(index2_btn_area_width*0.44);
+		$(".index2_btn .iconfont").height(index2_btn_area_width*0.44*0.65).css('line-height',index2_btn_area_width*0.44*0.65+"px");
+	}
+
+    var now_goods_machine = 0;
+    var now_goods_channel = 0;
+    function machine_msg(type, str, code) {
+        $('#machine_msg').show();
+        $('#machine_msg_bg').show();
+        $('#show_tips').hide();
+		no_action_time = 0;
+        switch (type) {
+            case -3:  //初始化结束
+                $('#machine_msg').html(str);
+                setTimeout(function () {
+                    $('#machine_msg').hide();
+                    $('#machine_msg_bg').hide();
+                }, 2000);
+                break;
+            case -2:
+                $('#machine_msg').html(str);
+                break;
+            case -1:
+                $('#machine_msg').html("<font style='color: red'>主板连接失败</font>");
+                break;
+            case 0:
+                $('#machine_msg').html("主板连接成功");
+                break;
+            case 1:
+                $('#machine_msg').html("正在出货,货道：" + str);
+                break;
+            case 2:
+                switch (code) {
+                    case 1:
+                        $('#machine_msg').html("出货异常:" + str); // code为1 主板没初始化成功
+                        break;
+                    case 2:
+                        $('#machine_msg').html("出货异常:" + str); // code为2 电机过流
+                        if(!is_debug_channel){
+                            notice_fault();//上报异常
+                        }
+                        break;
+                    case 3:
+                        $('#machine_msg').html("出货异常:" + str); // code为3 电机断线
+                        if(!is_debug_channel){
+                            notice_fault();//上报异常
+                        }
+                        break;
+                    case 4:
+                        $('#machine_msg').html("出货异常:" + str); // code为4 电机无停止信号
+                        if(!is_debug_channel){
+                            notice_fault();//上报异常
+                        }
+                        break;
+                    case 5:
+                        $('#machine_msg').html("出货异常:" + str); // code为5 出货超时
+                        if(!is_debug_channel){
+                            notice_fault();//上报异常
+                        }
+                        break;
+                }
+                break;
+            case 3:
+                switch (code) {
+                    case 0: // code为0 暂时不能出货  要处理延迟出货！
+                    	Android.Log("=============出货状态3-0=============");
+                        $('#machine_msg').html(str);
+                        setTimeout(function () {
+                            //Android.checkSoldGood(now_goods_machine);  //还会继续回调type=3的消息
+                        },3000);
+                        break;
+                    case 1: // code为1 可以出货
+                    	Android.Log("=============出货状态3-1=============");
+                        $('#machine_msg').html("准备出货");
+                        $("#go_buy").trigger('click');
+                        break;
+                }
+                break;
+            case 4:
+            	Android.Log("=============出货状态4=============");
+                if(show_take_godds==1){
+                    $('#machine_msg').html("请取走您的货品");
+                    setTimeout(function () {
+                        $('#machine_msg').hide();
+                        $('#machine_msg_bg').hide();
+                    }, 6000);
+                }else{
+                    $('#machine_msg').html("出货完成");
+                }
+                break;
+            case 5:
+            	Android.Log("=============出货状态5=============");
+                $('#machine_msg').html(msg);
+                setTimeout(function () {
+                    $('#machine_msg').hide();
+                    $('#machine_msg_bg').hide();
+                }, 1000);
+                break;
+            case 6:
+            	Android.Log("=============出货状态6=============");
+                $('#machine_msg').html();  //端口关闭
+                setTimeout(function () {
+                    $('#machine_msg').hide();
+                    $('#machine_msg_bg').hide();
+                }, 1000);
+                break;
+            case 7: //调试某货道失败
+            	Android.Log("=============出货状态7=============");
+                $('[data-channel_id="'+code+'"]').css('color','red');
+                break;
+            case 8: //调试某货道成功
+            	Android.Log("=============出货状态8=============");
+		        if($("#shopping_cart_box").css("display") == "block"){
+			    	//按钮重置
+			    	Android.Log(shipment_plus*1000);
+			    	setTimeout(function(){
+			    		if($("#shopping_cart_box").css("display") == "block"){
+				    		$("#shopping_cart_box button").removeAttr("disabled");
+				    		$('.cart_push_goods').removeClass("btn_disabled");
+			    			check_cart_push();
+				    	}
+			    	},shipment_plus*1000);
+		        }
+                $('[data-channel_id="'+code+'"]').css('color','#0c9c6e');
+                break;
+            case 9: //调试某货道成功
+            	Android.Log("=============出货状态9=============");
+                $('#debug_all_channel').html("全货道检测");
+                $('#machine_msg').html("全货道检测完毕");
+                setTimeout(function () {
+                    $('#machine_msg').hide();
+                    $('#machine_msg_bg').hide();
+                }, 3000);
+                break;
+			case 103://硬币器硬币不足
+				close_cash_pay();
+				$('#machine_msg').html("硬币器硬币不足");
+                    setTimeout(function () {
+                        $('#machine_msg').hide();
+                        $('#machine_msg_bg').hide();
+                    }, 2000);
+				break;
+        }
+    }
+    
+   
+    //现金收银监听器
+    function cash_msg(type, str, code) {
+        switch (type) {
+            case 100:
+            	no_action_time = 0;
+                var already_pay = $(".cash_payed").html()*1;
+                console.log(already_pay);
+                already_pay += code*1;
+                console.log(already_pay);
+                $(".cash_payed").html(already_pay);
+                if(need_notice){
+                    check_cash_pay();
+                }
+                break;
+            case 101:
+                $('#machine_msg').show();
+                $('#machine_msg_bg').show();
+                $('#show_tips').hide();
+                $('#machine_msg').html("现金收银器连接失败");
+                break;
+        }
+    }
+
+
+    if (machine_code == null || machine_token == null) {
+        $('#manager').show();
+        try {
+            $('#set_machine_code').val(Android.get_machine_code());
+        } catch (e) {
+        }
+    }
+
+    //体温表
+    var show_temp_num = radialIndicator('#show_temp_num', {
+        barWidth: 30,
+        radius: 200,
+        initValue: 0,
+        roundCorner: true,
+        format: '##.# ℃',
+        minValue: 0,
+        maxValue: 600,
+    });
+    
+    //检测现金支付结果，并发起支付成功通知，并开始找零
+    function check_cash_pay() {
+    	var payed = $(".cash_payed").html() * 1;
+    	var need_pay = $(".cash_need_pay").html() * 1;
+        if(need_pay>0 && need_pay <= payed && payed > 0){
+            Android.Log(now_pay_order_no);
+            Android.Log(need_pay);
+            $.ajax({
+                url:CASH_PAY_NOTIFY_URL,
+                type:'POST',
+                dataType:'JSON',
+                data:{
+                    out_trade_no:now_pay_order_no,
+                    total_fee:need_pay
+                },
+                success:function(response){
+                    if(response.state == 1){
+                        need_notice = false;//设置为不用再检测现金交易
+                        var need_return = payed - need_pay;
+                        if(need_return > 0){//如果需要退币
+                            $(".cash_need_return").html(need_return);//展示需要退币的数量
+                            Android.cash_return(need_return);//通知机器退币
+                            Android.Log("发起支付成功通知3");
+                        }else{
+                            $(".cash_need_return").html(0);
+                            try{
+								Android.coin_close();
+						    }catch (e){}
+                        }
+                        setTimeout(function () {
+                    		$("#show_cash_pay").hide();
+                    		$(".cash_need_return").html(0);
+                            $(".cash_payed").html(0);//已支付的为0
+//                          try{
+//								Android.cash_close();
+//						    }catch (e){}
+                        },2000);
+                    }
+                },
+                complete:function(){
+                	$("#show_cash_pay").hide();
+            		$(".cash_need_return").html(0);
+                    $(".cash_payed").html(0);//已支付的为0
+                }
+            });
+        }
+    }
+    
+    $("#cash_pay").on("click",function () {
+        $(".cash_payed").html(0);
+        $(".cash_need_return").html(0);//找零金额重置为0
+        $("#show_cash_pay").show();
+        need_notice = true;//开启检测现金交易
+	    try{
+            Android.cash_start("ttyS4"); //启动现金收银监听
+            Android.coin_start("ttyS1") //启动现金收银监听
+	    }catch (e){}
+        check_cash_pay();
+    });
+    
+    $("#close_cash_pay").on("click",function(){
+		close_cash_pay();
+    });
+    
+    function close_cash_pay(){
+        $("#show_cash_pay").hide();
+        var return_coin = $(".cash_payed").html()*1;
+        $(".cash_payed").html(0);//已付款金额重置为0
+        $(".cash_need_return").html(0);//找零金额重置为0
+        need_notice = false;//设置为不用再检测现金交易
+//      try{
+//      	Android.cash_close();
+//      	Android.cash_return(return_coin);//通知机器退币
+//			setTimeout(function(){
+//				Android.coin_close();
+//			},2000);
+//	    }catch (e){}
+    }
+    
+   	
+    setInterval(function () {
+        var payed = $(".cash_payed").html()*1;
+        if(payed>0){
+            $('#cash_show').html("已投入:"+payed+"元");
+            $('#cash_show').show();
+        }else{
+            $('#cash_show').hide();
+        }
+    },1000);
+    
+
+    //心跳数据
+    function get_online_heart() {
+        dmgc_ajax({
+            data: {
+                api_type: 'heart',
+            },
+            success: function (rs) {
+                rs = JSON.parse(rs);
+                if (rs.state == 1) {
+                    $('#signal').removeClass("signal_error");
+                    $('#signal').addClass("signal_active");
+                }
+            },
+            error: function () {
+                $('#signal').removeClass("signal_active");
+                $('#signal').addClass("signal_error");
+            }
+        });
+    }
+   
+
+    //异常上报 使用读取订单二位码时记录的订单编号和货道编号
+    function notice_fault() {
+    	Android.Log("上报异常");
+        dmgc_ajax({
+            data: {
+                api_type: 'notice_fault',
+                fault_type:'出货失败,订单号:'+now_pay_order_no,
+                fault_content:'货道编号：'+now_pay_order_channelId
+            },
+            success: function (rs) {
+				Android.Log("上报异常成功"+rs);
+            },
+            error: function (err) {
+				Android.Log("上报异常失败"+err);
+            }
+        });
+    }
+    
+    //打开按货到位置查找商品界面
+    $("#find_goods_btn").on("click",function(){
+    	$("#goods_position").css("border-color","lightgray");
+    	$("#cabinet_position").css("border-color","lightgray");
+    	$("#cabinet_position").addClass("number_div_foc");
+    	$("#goods_position").removeClass("number_div_foc");
+    	$("#find_goods_box").show();
+    });
+    
+    //关闭按货到位置查找商品界面
+    $("#find_goods_cover,.num_close").on("click",function(){
+    	$("#find_goods_box").hide();
+    });
+    
+    $("#get_prescription_cover").on("click",function(){
+    	$("#get_prescription_box").hide();//关闭药方窗口
+    })
+    
+    $("#cabinet_position").on("click",function(){
+    	$("#cabinet_position").addClass("number_div_foc");
+    	$("#goods_position").removeClass("number_div_foc");
+    	$("#goods_position").css("border-color","lightgray");
+    });
+    
+    $("#goods_position").on("click",function(){
+    	$("#goods_position").addClass("number_div_foc");
+    	$("#cabinet_position").removeClass("number_div_foc");
+    	$("#cabinet_position").css("border-color","lightgray");
+    });
+    
+    $(".num_click").on("click",function(){
+    	var num = $(".number_div_foc").html();
+    	if(num.length >= 3){
+    		return;
+    	}
+    	num += $(this).html();
+    	$(".number_div_foc").html(num);
+    });
+    
+    $(".num_del").on("click",function(){
+    	var num = $(".number_div_foc").html();
+    	num = num.substr(0,num.length-1);
+    	$(".number_div_foc").html(num);
+    });
+    
+    //按货到位置查找商品
+    function find_goods_by_position(){
+    	var cabinet_position = $("#cabinet_position").html();
+    	var goods_position = $("#goods_position").html();
+    	if(cabinet_position == "" || cabinet_position == null || typeof(cabinet_position) == "undefined"){
+    		$("#cabinet_position").css("border-color","red");
+    	}
+    	if(goods_position == "" || goods_position == null || typeof(goods_position) == "undefined"){
+    		$("#goods_position").css("border-color","red");
+    	}
+    	if(goods_position.length == 1){
+    		goods_position = '0' + goods_position;
+    	}
+    	dmgc_ajax({
+            data: {
+                'api_type': 'search_channel_goods',
+                'channel_name': cabinet_position + '柜' + goods_position
+            },
+            success: function (rs) {
+                rs = JSON.parse(rs);
+                if (rs.state == 1) {
+                	console.log(rs);
+        	        $('.cate_one_box').hide();
+			        $('.goods_one_box').hide();
+			        $('#show_tips').hide();
+                	$("#find_goods_box").hide();
+                	$("#get_prescription_box").hide();//关闭药方窗口
+			        $('[data-goods_cate_id="'+rs.data.goods.goods_cate_id+'"][data-goods_id="'+rs.data.goods.goods_id+'"].goods_one_box').show();
+				    $('#check_temp_box').hide(); //隐藏体温界面
+				    $('#yaopin_box').hide(); //隐藏药品界面
+                } else {
+                    $('#show_tips_str').html("获取商品信息失败");
+                    $('#show_tips').show();
+                    setTimeout(function () {
+                        $('#show_tips').hide();
+                        $("#find_goods_box").hide();
+                        $("#get_prescription_box").hide();//关闭药方窗口
+                    }, 2000);
+                }
+            },
+            complete: function () {
+
+            }
+        });
+    }
+    
+    //点击提货码获取药方
+    $("#get_prescription").on("click",function(){
+    	$("#get_prescription_box").show();
+    });
+    
+    //获取最近处方订单
+    function get_prescription(){
+    	Android.Log("get_prescription");
+        dmgc_ajax({
+            data: {
+                'api_type':'get_prescription',
+            },
+            success: function (rs) {
+                rs = JSON.parse(rs);
+                Android.Log(rs.data.orders_get_code);
+                if (rs.state == 1) {
+                    $("#prescription_code").val(rs.data.orders_get_code);
+                    get_prescription_by_code();
+                }
+            },
+            error:function(err){
+            	Android.Log("error");
+            }
+        });
+    }
+    
+    //提货码获取药方
+    function get_prescription_by_code(){
+    	var code = $("#prescription_code").val();
+    	if(code == "" || code == null || typeof(code) == "undefined" || code.length != 6){
+    		$("#prescription_code").css("border-color",'red');
+    		$("#prescription_code").off("click").on("click",function(){
+    			$("#prescription_code").css("border-color",'lightgray');
+    		});
+    		return false;
+    	}
+    	$('#show_goods_loading').show();
+    	$("#get_prescription_box").hide();//关闭药方窗口
+    	dmgc_ajax({
+            data: {
+                'api_type': 'get_order_by_code',
+                'get_code': code
+            },
+            success: function (rs) {
+            	$('#show_goods_loading').hide();
+                rs = JSON.parse(rs);
+                if (rs.state == 1) {
+                	shopping_cart = [];
+                	var cart_num = 0;
+                	for(var i in rs.data.orders_detail){
+                		var goods_data = {};
+	                	goods_data.goods_id = rs.data.orders_detail[i].detail_goods_id;
+	                	goods_data.goods_title = rs.data.orders_detail[i].goods_title;
+	                	goods_data.goods_price = rs.data.orders_detail[i].detail_goods_price;
+	                	goods_data.goods_cover = "http://www.klzhyf.com/uploads/" + rs.data.orders_detail[i].goods_cover;
+	                	goods_data.goods_type = rs.data.orders_detail[i].detail_goods_type;
+	                	goods_data.goods_num = rs.data.orders_detail[i].detail_goods_num;
+	                	cart_num += rs.data.orders_detail[i].detail_goods_num;
+	                	shopping_cart.push(goods_data);
+                	}
+                	$("#shopping_cart_num").html(cart_num);
+    				$("#cart_total_num").html(cart_num);
+    				$("#cart_total_money").html(rs.data.orders_total_money);
+    				init_shooping_cart_goods();
+    				check_cart();
+    				$("#shopping_cart_logo").click();
+//  				if(rs.data.orders_info.orders_type == 2){
+//  					$("#sure_examine_btn").off('click').on("click",function(){
+//							$("#sure_examine_box").hide();
+//							$("#clean_shopping_cart").hide();
+//							$("#get_prescription").hide();
+//							$("#wait_examine_box").show();
+//							//检测审核订单状态
+//							audit_order(rs);
+//						});
+//  				}
+					$("#pay_type_box").hide();
+					$("#goods_examine_box").hide();
+					show_qr_code(rs);
+					$("#pay_type_box").show();
+                	console.log(rs);
+                } else {
+                	$('#show_goods_loading').hide();
+                    $('#show_tips_str').html("获取药方信息失败");
+                    $('#show_tips').show();
+                    setTimeout(function () {
+                        $('#show_tips').hide();
+                        $("#find_goods_box").hide();
+                        $("#get_prescription_box").hide();//关闭药方窗口
+                    }, 2000);
+                }
+            },
+            complete: function () {
+            	$('#show_goods_loading').hide();
+				$("#get_prescription_box").hide();//关闭药方窗口
+            }
+        });
+    }
+    
+    //添加商品到购物车
+    function add_to_cart(_this){
+    	var goods_info = $(_this).parent();
+    	var goods_data = {};
+        goods_data.goods_id = goods_info.data("goods_id");
+        goods_data.goods_cate_id = goods_info.data("goods_cate_id");
+        goods_data.goods_title = goods_info.data("goods_title");
+        goods_data.goods_price = goods_info.data("goods_price");
+        goods_data.goods_cover = goods_info.data("goods_cover");
+        goods_data.goods_desc = goods_info.data("goods_desc");
+        goods_data.goods_type = goods_info.data("goods_type");
+        goods_data.goods_spec = goods_info.data("goods_spec");
+        goods_data.goods_stock = goods_info.data("goods_stock");
+    	if(goods_data.goods_id != "" && goods_data.goods_id != null && typeof(goods_data.goods_id) != "undefined"){
+    		var cart_num = 0;
+    		var total_money = 0;
+    		var is_exist = false;
+    		for(var i in shopping_cart){
+    			if(goods_data.goods_id == shopping_cart[i].goods_id){
+    				is_exist = true;
+    				if(shopping_cart[i].goods_num < shopping_cart[i].goods_stock){
+    					shopping_cart[i].goods_num += 1;
+    				}else{
+	                    $('#show_tips_str').html("该商品库存不足");
+	                    $('#show_tips').show();
+	                    setTimeout(function () {
+	                        $('#show_tips').hide();
+	                    }, 2000);
+	                    event.stopPropagation(); 
+	                    return false;
+    				}
+    			}
+    			cart_num += shopping_cart[i].goods_num;
+				total_money += Number(shopping_cart[i].goods_price) * Number(shopping_cart[i].goods_num) * 1; 
+    		}
+    		if(!is_exist){
+    			if(goods_data.goods_stock >= 1){
+    				goods_data.goods_num = 1;
+    				shopping_cart.push(goods_data);
+	    			cart_num += 1;
+	    			total_money += Number(goods_data.goods_price) * 1;
+    			}else{
+    				$('#show_tips_str').html("该商品库存不足");
+                    $('#show_tips').show();
+                    setTimeout(function () {
+                        $('#show_tips').hide();
+                        $('#show_goods').hide();
+                    }, 2000);
+    				event.stopPropagation();
+    				return false;
+    			}
+    		}
+    		$("#shopping_cart_num").html(cart_num);
+    		$("#cart_total_num").html(cart_num);
+    		$("#cart_total_money").html(total_money.toFixed(2));
+    	}
+    	no_action_time = 0;
+    	event.stopPropagation();
+    }
+    
+    //进入购物车页
+    $("#shopping_cart_logo").on("click",function(){
+        $('#show_tips').hide();
+		$("#find_goods_box").hide();
+		$("#get_prescription_box").hide();//关闭药方窗口
+		init_shooping_cart_goods();
+		check_cart();
+		$("#shopping_cart_box button").removeAttr("disabled");
+		$("#normal_goods").hide();
+		$("#shopping_cart_logo").hide();
+		$(".cart_push_goods").hide();
+		$("#clean_shopping_cart").show();
+		$("#get_prescription").show();
+		$(".cart_del_goods").show();
+        $("#shopping_cart_box").show();
+        $("#mall").addClass("overflow_hidden");
+        $('#show_goods').show();
+    });
+	
+	//检测购物车商品类型
+	function check_cart(){
+		var need_exam = false;
+		var pay_goods_info = [];
+		for(var i in shopping_cart){
+			var pay_good = {};
+    		pay_good.id = shopping_cart[i].goods_id;
+    		pay_good.num = shopping_cart[i].goods_num;
+    		pay_goods_info.push(pay_good);
+			if(shopping_cart[i].goods_type == 2){
+				need_exam = true;
+			}
+		}
+		if(need_exam){
+			$("#pay_type_box").hide();
+			$("#wait_examine_box").hide();
+			$("#examine_success_box").hide();
+			$("#examine_fail_box").hide();
+			$("#goods_examine_box").show();
+			$("#sure_examine_box").show();
+			$("#sure_examine_btn").off('click').on("click",function(){
+				$("#sure_examine_box").hide();
+				$("#clean_shopping_cart").hide();
+				$("#get_prescription").hide();
+				$("#wait_examine_box").show();
+				//提价订单并检测审核订单状态
+				pay_for_goods(pay_goods_info);
+			});
+		}else{
+			$("#pay_type_box").hide();
+			$("#goods_examine_box").hide();
+			if(shopping_cart.length > 0){
+				$("#cart_sure_pay").show();
+			}else{
+				$("#cart_sure_pay").hide();
+			}
+		}
+	}
+    
+    //渲染购物车商品
+    function init_shooping_cart_goods(){
+    	var _html = "";
+		for(var i in shopping_cart){
+			_html += '<div class="cart_one_good_box">'+
+			'<div class="cart_one_good" style="width: 30%;"><div style="line-height:30px;margin-top:35px">'+shopping_cart[i].goods_title+'</div></div>'+
+			'<div class="cart_one_good" style="width: 20%;line-height: 110px;">'+
+				'<img src="'+shopping_cart[i].goods_cover+'" style="width: 100px;background-size: 100% 100%;">'+
+			'</div>'+
+			'<div class="cart_one_good" style="width: 15%;">￥'+shopping_cart[i].goods_price+'</div>'+
+			'<div class="cart_one_good" style="width: 10%;">x'+shopping_cart[i].goods_num+'</div>'+
+			'<div class="cart_one_good" style="width: 20%;position: relative">'+
+				'<button onclick="cart_remove('+shopping_cart[i].goods_id+');" class="cart_good_handle_btn cart_del_goods">删  除</button>'+
+				'<button onclick="cart_push_goods(this);" data-goods_id="'+shopping_cart[i].goods_id+'" class="cart_good_handle_btn2 cart_push_goods">'+
+					'出  货'+
+				'</button>'+
+			'</div>'+
+		'</div>'+
+		'<div style="clear: both;"></div>'
+		}
+		$("#cart_goods_list").html(_html);
+    }
+    
+    //移除购物车商品
+    function cart_remove(goods_id){
+    	if(goods_id != "" && goods_id != null && typeof(goods_id) != "undefined"){
+    		for(var i in shopping_cart){
+    			if(goods_id == shopping_cart[i].goods_id){
+    				$("#shopping_cart_num").html($("#shopping_cart_num").html() - shopping_cart[i].goods_num);
+		    		$("#cart_total_num").html($("#shopping_cart_num").html());
+    				$("#cart_total_money").html(($("#cart_total_money").html() - shopping_cart[i].goods_num * shopping_cart[i].goods_price * 1).toFixed(2));
+    				console.log($("#cart_total_money").html());
+    				shopping_cart.splice(i,1);
+    				break;
+    			}
+    		}
+    		init_shooping_cart_goods();
+    		check_cart();
+    	}
+    }
+    
+    //清空购物车
+    function clean_shopping_cart(){
+    	shopping_cart = [];
+    	$("#shopping_cart_num").html(0);
+    	$("#cart_goods_list").html("");
+    	$("#cart_sure_pay").hide();
+    	$("#pay_type_box").hide();
+    	$("#goods_examine_box").hide();
+		$("#cart_total_num").html(0);
+		$("#cart_total_money").html(0);
+    }
+    
+    //购物车付款
+    function shopping_cart_pay(){
+    	var pay_goods_info = [];
+    	for(var i in shopping_cart){
+    		var pay_good = {};
+    		pay_good.id = shopping_cart[i].goods_id;
+    		pay_good.num = shopping_cart[i].goods_num;
+    		pay_goods_info.push(pay_good);
+    	}
+    	$("#shopping_cart_box button").attr("disabled","true");
+    	$("#cart_back_index").removeAttr("disabled");
+    	$("#clean_shopping_cart").hide();
+    	$("#get_prescription").hide();
+    	pay_for_goods(pay_goods_info);
+    }
+    
+   	//购物车商品出货
+   	function cart_push_goods(_this){
+   		var _id = $(_this).data("goods_id");
+   		for(var i in now_payed_order_info.data.orders_detail){
+   			if(now_payed_order_info.data.orders_detail[i].detail_goods_id == _id){
+   				if(now_payed_order_info.data.orders_detail[i].detail_goods_num >= 1){
+   					var goods_left = now_payed_order_info.data.orders_detail[i].detail_goods_num * 1 - 1;
+	   				if(goods_left == 0){
+	   					$(_this).html("完成")
+	   					$(_this).attr("disabled","true");
+	   					$(_this).css('background-color','gray').css('border-color','gray');
+	   				}
+	   				now_payed_order_info.data.orders_detail[i].detail_goods_num = goods_left;
+	   				machine_good(now_payed_order_info.data.orders_detail[i].detail_channel_name);
+   				}
+   				break;
+   			}
+   		}
+   	}
+
+    //读取商品列表
+    function get_goods() {
+        dmgc_ajax({
+            data: {
+                api_type: "get_goods"
+            },
+            success: function (backdata) {
+                backdata = JSON.parse(backdata);
+                if (backdata.state == 1) {
+                    IMAGE_DOMAIN = backdata.data.image_domain;
+                    goods_cate = backdata.data.cate;
+                    goods_list = backdata.data.goods;
+                    dom_cate();//渲染分类
+                    dom_goods();//渲染产品
+                    showcate(); //显示分类+产品
+                }
+            },
+            error: function () {
+
+            },
+            complete: function () {
+
+            }
+        });
+    }
+
+    //渲染产品分类
+    function dom_cate() {
+        if (typeof(goods_cate) != "undefined" && goods_cate != null && goods_cate != "" && goods_cate.length > 0) {
+            var _html = '';
+            var color_num;
+            for (i in goods_cate) {
+            	if(i < 16){
+            		color_num = Math.floor(i/2);
+            	}else{
+            		var i_num = i-Math.floor(i/8)*8;
+            		color_num = Math.floor(color_num/2);
+            	}
+                var item = goods_cate[i];
+                _html += '<li style="padding:10px" class="cate_one_box" data-cate_id="' + item['cate_id'] + '" data-cate_pid="' + item['cate_pid'] + '" data-cate_is_leaf="' + item['cate_is_leaf'] + '" data-cate_title="' + item['cate_title'] + '">' +
+                        '   <div class="cate_one" style="background-color:'+color_arr[color_num]+';">' + item['cate_title'] + '</div>' +
+                        '</li>';
+            }
+            $('#cate_list').html(_html);
+            $('.cate_one_box').off('click').on('click', function () {
+                up_cate_pid = now_cate_pid;
+                now_cate_pid = $(this).data("cate_id");
+                showcate(); //显示分类+产品
+            });    
+        } else {
+            alert("没有分类");
+        }
+    }
+   
+    //渲染商品列表
+    function dom_goods() {
+    	console.log(goods_list);
+        if (typeof(goods_list) != "undefined" && goods_list != null && goods_list != "" && goods_list.length > 0) {
+            var _html = '';
+            for (i in goods_list) {
+                var item = goods_list[i];
+                _html += '<li class="goods_one_box" style="position:relative" data-goods_cate_is_leaf="'+item['cate_is_leaf']+'" data-goods_id="' + item['goods_id'] + '" data-goods_cate_id="' + item['goods_cate_id'] + '" data-goods_title="' + item['goods_title'] + '" data-goods_cover="' + item['goods_cover'] + '" data-goods_price="' + item['goods_price'] + '" data-goods_desc="' + item['goods_desc'] + '"data-goods_type="' + item['goods_type'] + '"data-goods_spec="' + item['goods_spec'] + '" data-goods_stock="'+item['goods_stock']+'">' +
+                        '   <div class="goods_one">' +
+                        '       <div class="goods_one_pic">' +
+                        '           <img src="' + item['goods_cover'] + '" width="100%">';
+                if (item.goods_type == 2) {
+                    _html +=  '<img src="./images/rx_type_bugle.png" style="position:absolute;right:5px;bottom:5px;width:25%">';
+                }
+                _html +=  '       </div>' +
+                        '       <div>￥' + item['goods_price'] * 1 + '</div>' +
+                        '       <div>' + item['goods_title'] + '</div>' +
+                        '   </div>' +
+                        '<div onclick="add_to_cart(this);" class="iconfont" style="color:#fff;position:absolute;bottom:0px;left:20px;font-size:4.5em" data-goods_id="'+ item['goods_id'] +'">&#xe622;</div>' +
+                        '</li>';
+            }
+            $('#goods_list').html(_html);
+        } else {
+            alert("没有商品");
+        }
+    }
+    
+    //点击一个产品
+    $('#goods_list').on('click','.goods_one_box', function () {
+        var goods_id = $(this).data("goods_id");
+        var goods_cate_id = $(this).data("goods_cate_id");
+        var goods_title = $(this).data("goods_title");
+        var goods_price = $(this).data("goods_price");
+        var goods_cover = $(this).data("goods_cover");
+        var goods_desc = $(this).data("goods_desc");
+        var goods_type = $(this).data("goods_type");
+        var goods_spec = $(this).data("goods_spec");
+		var goods_stock = $(this).data("goods_stock");
+		
+		$("#cart_div").data("goods_id",goods_id);
+		$("#cart_div").data("goods_cate_id",goods_cate_id);
+		$("#cart_div").data("goods_title",goods_title);
+		$("#cart_div").data("goods_price",goods_price);
+		$("#cart_div").data("goods_cover",goods_cover);
+		$("#cart_div").data("goods_desc",goods_desc);
+		$("#cart_div").data("goods_type",goods_type);
+		$("#cart_div").data("goods_spec",goods_spec);
+		$("#cart_div").data("goods_stock",goods_stock);		
+		
+		$("#mall").addClass("overflow_hidden");
+		
+        $('#show_goods_pic').attr("src", goods_cover);
+        $('#show_goods_title').html(goods_title);
+        $('#show_goods_spec').html("规格："+goods_spec);
+        $('#show_goods_channel').html("");
+        $('#show_goods_price').html("￥"+goods_price);
+        $('#show_goods_desc').html(goods_desc);
+        $('#qr_wechat').html("");
+        $('#qr_alipay').html("");
+        $("#fail_reson").html("");
+        need_notice = false;
+        $(".cash_need_pay").html(0);//需要支付的现金重置为0
+        $(".cash_need_return").html(0);//找零金额重置为0
+        $("#shopping_cart_box").hide();
+        $("#shopping_cart_logo").hide();
+        $("#show_cash_pay").hide();
+        $("#normal_goods").show();
+        $('#show_goods').show();
+        $('.btn_back').show();
+        var pay_goods_info = [];
+        var pay_goods = {};
+        pay_goods.id = goods_id;
+        pay_goods.num = 1;
+        pay_goods_info.push(pay_goods);
+		if(goods_type == 2){
+			$("#rx_full_img").css("opacity",1);
+			$("#pay_type_box").hide();
+			$("#goods_examine_box").show();
+			$("#sure_examine_box").show();
+			$("#wait_examine_box").hide();
+			$("#examine_success_box").hide();
+			$("#examine_fail_box").hide();
+			$("#sure_examine_btn").off('click').on("click",function(){
+				$("#sure_examine_box").hide();
+				$("#wait_examine_box").show();
+				//提价订单并检测审核订单状态
+				pay_for_goods(pay_goods_info);
+			});
+		}else{
+			$("#rx_full_img").css("opacity",0);
+			$("#goods_examine_box").hide();
+			$("#pay_type_box").show();
+			$('#show_goods_loading').show();
+			//提价订单请求二维码
+	        pay_for_goods(pay_goods_info);
+		}
+    });
+    
+    //提交订单生成二维码
+    function pay_for_goods(_data){
+    	$('#show_goods_loading').show();
+        dmgc_ajax({
+            data: {
+                api_type: "get_order_qr",
+                goods_info:_data
+            },
+            success: function (backdata) {
+            	var res = JSON.parse(backdata);
+            	if(res.state == 1){
+            		if(res.data.orders_info.orders_type == 2){//若订单为审核订单
+            			$('#show_goods_loading').hide();
+	            		audit_order(res);
+	            	}else{
+	            		console.log(res);
+	            		show_qr_code(res);
+	            	}
+            	}else if (res.state == '0') {
+                    $('#show_tips').show();
+                    $('#show_tips_str').html("该商品已售罄");
+                    setTimeout(function () {
+                        $('#show_tips').hide();
+                        $('#show_goods').hide();
+                    }, 3000);
+                } else {
+                    $('#show_tips').show();
+                    $('#show_tips_str').html(res.msg);
+                    setTimeout(function () {
+                        $('#show_tips').hide();
+                        $('#show_goods').hide();
+                    }, 3000);
+                }
+            },
+            complete: function () {
+                $('#show_goods_loading').hide();
+            }
+        });
+    }
+            
+    //处理审核订单
+	function audit_order(_order_info){
+		timer1 = setInterval(function(){
+			no_action_time = 0
+			dmgc_ajax({
+				data:{
+					api_type: 'check_order_audit',
+	        		order_id: _order_info.data.order_id
+				},
+				success:function(backdata){
+					var res = JSON.parse(backdata);
+					if(res.state == 1){
+						clearInterval(timer1);
+						$("#wait_examine_box").hide();
+						$("#examine_success_box").show();
+						show_qr_code(_order_info);
+					}
+				},
+			});
+		},1000);
+	}
+	
+	//显示支付二维码
+	function show_qr_code(_order_info){
+		//正常生成订单
+        var order_id = _order_info.data.order_id;
+        var pay_no = _order_info.data.pay_no;
+
+        //记录当前订单和出货货道编号
+        now_pay_order_no = pay_no;
+        now_pay_order_channelId = _order_info.data.channel_name;
+
+        $('#show_goods_channel').html(_order_info.data.channel_name); //提示出货货道编号
+        $('#qr_wechat').html("");
+        $('#qr_alipay').html("");
+
+        jQuery('#qr_wechat').qrcode({
+            render: "canvas",
+            text: _order_info.data['wechat'],
+            width: 300, //宽度
+            height: 300, //高度
+        });
+        jQuery('#qr_alipay').qrcode({
+            render: "canvas",
+            text: _order_info.data['alipay'],
+            width: 300, //宽度
+            height: 300, //高度
+        });
+        
+        $(".cash_need_pay").html(Math.ceil(_order_info.data.orders_total_money*1));//add by lengjianghua
+		$("#goods_examine_box").hide();
+		$("#cart_sure_pay").hide();
+		$("#pay_type_box").show();
+		//更换btn
+		$('#show_goods_loading').hide();
+		check_pay(_order_info);
+	}
+	
+	//检查付款状态
+	function check_pay(_order_info){
+		 clearInterval(lockTimer);
+		 clearInterval(timer_check_pay);
+		 timer_check_pay = setInterval(function () {
+            dmgc_ajax({
+                timeout: 3000,
+                data: {
+                    api_type: 'check_order_pay',
+                    order_id: _order_info.data.order_id,
+                    pay_no: _order_info.data.pay_no
+                },
+                success: function (order_backdata) {
+	                var order_rs = JSON.parse(order_backdata);
+	                if (order_rs.data['scan'] == 1) {
+	                    $('#show_tips').show();
+	                    $('#show_tips_str').show();
+	                    $('#show_tips_str').html("扫码成功,请付款");
+	                    if(!lockTimer>0){
+	                    	var count = 60;
+		                    lockTimer = setInterval(function(){
+		                    	$("#count_down_div").html(count);
+		                    	if(count == 0){
+		                    		back_to_index();
+		                    		$("#count_down_div").html("");
+		                    	}
+		                    	count--;
+		                    },1000);
+	                    }
+	                }
+	                if (order_rs.state == 1) {
+	                	clearInterval(lockTimer);
+	                    clearInterval(timer_check_pay); //停止timer循环
+	                    now_cate_pid = 0;
+	                    $(".cart_del_goods").hide();
+	                    $(".cart_push_goods").removeAttr("disabled");
+                		$(".cart_push_goods").show();
+                		now_payed_order_info = _order_info;
+	                    if($("#shopping_cart_box").css("display") != "block"){
+        				    $.ajax({
+						    	url:"http://myklym.cn:8090/ask/ask/finishHandle.action",
+						    	type:"POST",
+						    	dataType:'jsonp',  
+						    	data:{
+						    		"userId":machine_code,
+						    		"isCy":1
+						    	},
+						    	success:function(ret){
+						    		console.log(ret);
+						    	},
+						    	error:function(err){
+						    		console.log(err);
+						    	}
+						    });
+	                    	showcate(true);
+	                    }else{
+            				$("#pay_type_box").hide();
+							$("#wait_examine_box").hide();
+							$("#examine_success_box").hide();
+							$("#examine_fail_box").hide();
+							$("#goods_examine_box").hide();
+							$("#sure_examine_box").hide();
+	                    	for(var i in now_payed_order_info.data.orders_detail){
+	                    		$('[data-goods_id="'+now_payed_order_info.data.orders_detail[i].detail_goods_id+'"].cart_push_goods').html('等待出货');
+	                    	}
+	                    }
+	                    var goods_left = now_payed_order_info.data.orders_detail[0].detail_goods_num * 1 - 1;
+		   				if(goods_left == 0){
+		   					$('[data-goods_id="'+now_payed_order_info.data.orders_detail[0].detail_goods_id+'"].cart_push_goods').html("完成");
+		   					$('[data-goods_id="'+now_payed_order_info.data.orders_detail[0].detail_goods_id+'"].cart_push_goods').attr("disabled","true");
+		   					$('[data-goods_id="'+now_payed_order_info.data.orders_detail[0].detail_goods_id+'"].cart_push_goods').css('background-color','gray').css('border-color','gray');
+		   				}
+		   				now_payed_order_info.data.orders_detail[0].detail_goods_num = goods_left;
+		   				machine_good(now_payed_order_info.data.orders_detail[0].detail_channel_name);
+	                }
+	            }
+	        });
+	    }, 3500);
+	}
+	
+	//控制机器出货
+	function machine_good(_channel){
+		console.log(_channel);
+		//通知机器出货  先检查是否可以出货
+		var channel = _channel.split('柜');
+		now_goods_machine = channel[0]*1;
+        now_goods_channel = channel[1]*1;
+        $('#show_tips_str').html("正在为您出货");
+        $('#show_tips').show();
+        $('#show_tips_str').show();
+		console.log(_channel+"正在为您出货");
+        if($("#shopping_cart_box").css("display") == "block"){
+        	//禁用按钮，等待反馈解锁
+        	$("#shopping_cart_box button").attr("disabled","true");
+        	$('.cart_push_goods').addClass("btn_disabled");
+        }
+        Android.Log(now_goods_machine+"柜"+now_goods_channel+"货道开始出货")
+        Android.play_push_goods();
+        //Android.checkSoldGood(now_goods_machine); //可以先做检测
+        Android.machine_good(now_goods_machine,now_goods_channel);
+	}
+	
+	//检查购物车出货情况
+	function check_cart_push(){
+		if($("#shopping_cart_box").css("display") == "block"){
+			var push_finish = true;
+			for(var i in now_payed_order_info.data.orders_detail){
+				if(now_payed_order_info.data.orders_detail[i].detail_goods_num != 0){
+					var goods_left = now_payed_order_info.data.orders_detail[i].detail_goods_num * 1 - 1;
+	   				if(goods_left == 0){
+	   					$('[data-goods_id="'+now_payed_order_info.data.orders_detail[i].detail_goods_id+'"].cart_push_goods').html("完成");
+	   					$('[data-goods_id="'+now_payed_order_info.data.orders_detail[i].detail_goods_id+'"].cart_push_goods').attr("disabled","true");
+	   					$('[data-goods_id="'+now_payed_order_info.data.orders_detail[i].detail_goods_id+'"].cart_push_goods').css('background-color','gray').css('border-color','gray');
+	   				}
+	   				now_payed_order_info.data.orders_detail[i].detail_goods_num = goods_left;
+	   				machine_good(now_payed_order_info.data.orders_detail[i].detail_channel_name);
+					push_finish = false;
+					break;
+				}
+			}
+			if(push_finish){
+				console.log(now_payed_order_info.data.orders_info.orders_machine_id);
+				get_goods();
+				clean_shopping_cart();
+			    $.ajax({
+			    	url:"http://myklym.cn:8090/ask/ask/finishHandle.action ",
+			    	type:"POST",
+			    	dataType:'jsonp',  
+			    	data:{
+			    		"userId":machine_code,
+			    		"isCy":1
+			    	},
+			    	success:function(ret){
+			    		console.log(ret);
+			    	},
+			    	error:function(err){
+			    		console.log(err);
+			    	}
+			    });
+				setTimeout(function(){
+					now_payed_order_info = [];
+					showcate(true);
+				},3000)
+			}
+    	}
+	}
+	
+	
+	//机器出货反馈
+    $('#machine_msg_bg,#machine_msg').on('click',function () {
+        $('#machine_msg').hide();
+        $('#machine_msg_bg').hide();
+    });
+    
+    //提交投诉表单
+    $("#tousu_submit").on("click",function(){
+    	var tousu_data = $("#tousu_form").serializeArray();
+    	console.log(tousu_data);
+    	for(var i in tousu_data){
+    		console.log(tousu_data[i]);
+    		if(tousu_data[i].value == ""){
+                $('#show_tips_str').html("请输入完整数据");
+                $('#show_tips').show();
+                setTimeout(function () {
+                    $('#show_tips').hide();
+                }, 2000);
+    			return;
+    		}
+    	}
+    	$('#show_tips_str').html("提交中...");
+        $('#show_tips').show();
+    	dmgc_ajax({
+            data: {
+                api_type: 'post_complaint',
+                data: tousu_data
+            },
+            success: function (ret) {
+  	  			var rs = JSON.parse(ret);
+            	if(rs.state == 1){
+	        		var tousu_back = JSON.parse(rs.data[1]);
+	        		if(tousu_back['StatusCode'] == 200){
+	            		$('#show_tips_str').html("提交成功");
+		                $('#show_tips').show();
+		                setTimeout(function () {
+		                    $('#show_tips').hide();
+		                }, 2000);
+		                $("#btn_type").click();
+	        		}else{
+	        			$('#show_tips_str').html("提交失败，请重试");
+		                $('#show_tips').show();
+		                setTimeout(function () {
+		                    $('#show_tips').hide();
+		                }, 2000);
+	        		}
+            	}else{
+            		$('#show_tips_str').html("提交失败，请重试");
+	                $('#show_tips').show();
+	                setTimeout(function () {
+	                    $('#show_tips').hide();
+	                }, 2000);
+            	}
+            },
+            error:function(err){
+            	$('#show_tips_str').html("提交失败，请重试");
+                $('#show_tips').show();
+                setTimeout(function () {
+                    $('#show_tips').hide();
+                }, 2000);
+            },
+            complete: function () {
+
+            }
+        });
+    });
+
+    //控制分类和商品显示
+    function showcate(isForce) {
+    	var i0 = 0;
+    	var color_num;
+        if (now_cate_pid > 0) {
+            $('.btn_back').show();
+        } else {
+            $('.btn_back').hide();
+        }
+        $("#mall").removeClass("overflow_hidden");
+        $("#shopping_cart_logo").show();
+        $('.cate_one_box').hide();
+        $('.goods_one_box').hide();
+        $('#show_tips').hide();
+        $('[data-cate_pid="'+now_cate_pid+'"].cate_one_box').show();
+        $('[data-goods_cate_id="'+now_cate_pid+'"][data-goods_cate_is_leaf="1"].goods_one_box').show();
+        if(now_cate_pid > 0){
+        	$(".cate_one_box").each(function(){
+	        	if($(this).css("display") != "none"){
+	        		if(i0 < 16){
+	            		color_num = Math.floor(i0/2);
+	            	}else{
+	            		var i_num = i0-Math.floor(i0/8)*8;
+	            		color_num = Math.floor(color_num/2);
+	            	}
+	            	$(this).find("div").css("background-color",color_arr[color_num]);
+	            	i0++;
+	        	}
+        	});
+        }
+        $('#check_temp_box').hide(); //隐藏体温界面
+        $('#yaopin_box').hide(); //隐藏药品界面
+        if(isForce){
+            $('#show_goods').hide(); //关闭产品详情页
+            try {
+            	clearInterval(lockTimer);
+                clearInterval(timer_check_pay);  //停止支付检测
+            } catch (e) {
+            }
+        }
+    }
+
+    //点击返回按钮
+    $('.btn_back').on('click', function () {
+    	if($('#show_tips_str').html() == "扫码成功,请付款" && $('#show_tips').css("display") == "block"){
+    		return false;
+    		event.stopPropagation(); 
+    	}
+    	clearInterval(lockTimer);
+    	clearInterval(timer_check_pay);  //停止支付检测
+    	$("#mall").removeClass("overflow_hidden");
+    	$("#shopping_cart_logo").show();
+    	$("#pay_type_box").hide();
+        $('#qr_wechat').html("");
+        $('#qr_alipay').html("");
+        if($('#show_goods').css('display')!='none'){
+        	clearInterval(timer1);
+            $('#show_goods').hide();
+            $("#find_goods_box").hide();
+            $('#show_goods_loading').hide();
+            $("#get_prescription_box").hide();//关闭药方窗口
+        }else{
+            var up_temp_cate_id = $('[data-cate_id=' + up_cate_pid + '].cate_one_box').data("cate_pid");
+            now_cate_pid = up_cate_pid;
+            up_cate_pid = up_temp_cate_id;
+            showcate();//显示分类+产品
+            if (now_cate_pid == 0) {
+                $('.btn_back').hide();
+                $("#btn_type").hide();
+                $('#btn_index2').show();
+            }
+        }
+    });
+
+    //读取广告列表
+    function get_ad_list() {
+        dmgc_ajax({
+            data: {
+                api_type: "ad_list"
+            },
+            success: function (backdata) {
+                backdata = JSON.parse(backdata);
+                if (backdata.state == 1) {
+                    var userfull_files = ""; //有用的文件
+
+                    //处理默认播放资源下载
+                    if (backdata.data.default_resource!="" && IMAGE_DOMAIN != "") {
+                        try {
+                            var url = IMAGE_DOMAIN + backdata.data.default_resource.default_file;
+                            userfull_files += IMAGE_DOMAIN + backdata.data.default_resource.default_file + "|";
+                            Android.downloadfile(url+"");
+                            //TODO: 待完成
+                        } catch (e) {
+                        }
+                    }
+
+                    //处理下载
+                    if (backdata.data.resource_list.length > 0 && IMAGE_DOMAIN != "") {
+                        ad_list_down = backdata.data.resource_list;
+                        //逐一调用Native创建线程下载
+                        for (i in ad_list_down) {
+                            try {
+                                var url = IMAGE_DOMAIN + ad_list_down[i]["resource_file"];
+                                userfull_files += url + "|";
+                                Android.downloadfile(url+"");
+                                //TODO: 待完成
+                            } catch (e) {
+                            }
+                        }
+                    }
+
+                    //处理播放列表
+                    ad_list = []; //清空
+                    if (backdata.data.advertise_list.length > 0 && IMAGE_DOMAIN != "") {
+                        for(i in backdata.data.advertise_list){
+                            ad_list.push(backdata.data.advertise_list[i]);
+                        }
+                    }else{
+                        var default_ad = {};
+                        default_ad.resource_file = backdata.data.default_resource['default_file']; //资源地址
+                        default_ad.carousel_duration_time = backdata.data.default_resource['default_second']; //单条长度
+                        default_ad.resource_type = backdata.data.default_resource['default_type']; //资源类型
+                        default_ad.carousel_carousel_times = 2; //默认播放2次
+                        ad_list.push(default_ad);
+                    }
+                    console.log("播放清单",ad_list);
+
+                    //删除无用的文件
+                    try {
+                        Android.clear_nouse_files(userfull_files);
+                    } catch (e) {}
+                }
+            },
+            error: function () {
+
+            },
+            complete: function () {
+
+            }
+        });
+    }
+
+    setInterval(function () {
+        if ($("#player").css("display") != 'none') {
+            //如果临时播放列表空了
+            if (typeof(ad_list_temp) == 'undefined' || ad_list_temp == null || ad_list_temp == "" || ad_list_temp.length == 0) {
+                //并且要播放的广告列表有内容
+                if (typeof(ad_list) != 'undefined' && ad_list.length > 0) {
+                    //深拷贝要播放的数据到临时列表
+                    ad_list_temp = JSON.parse(JSON.stringify(ad_list));
+                }
+            } else {
+                if (ad_list_temp.length > 0) {
+                    if (!is_playing) {
+
+                        //在合法范围内，取得随机要播放的键值
+                        var random_num = myRandom(0, ad_list_temp.length - 1);
+                        //保证每次不同
+                        if (now_play_num != 0 && now_play_num == random_num && ad_list_temp.length > 1) {
+                            while (now_play_num == random_num) {
+                                random_num = myRandom(0, ad_list_temp.length - 1);
+                            }
+                        }
+                        now_play_num = random_num;
+
+                        //取出当前要播放的
+                        var now_play = ad_list_temp[random_num];
+                        var url = IMAGE_DOMAIN + now_play.resource_file;
+                        var type = now_play.resource_type;
+                        var second = now_play.carousel_duration_time;
+                        if (!second || second <= 4) {
+                            second = 5;
+                        }
+                        //减少一次轮播次数
+                        ad_list_temp[random_num]['carousel_carousel_times'] = (ad_list_temp[random_num]['carousel_carousel_times'] * 1) - 1;
+                        if (ad_list_temp[random_num]['carousel_carousel_times'] <= 0) {
+                            ad_list_temp.splice(random_num, 1);
+                        }
+                        //开始播放
+                        try {
+                            console.log("播放广告" + second + "S", url);
+                            var filePath="none";
+                            try{
+                                filePath = Android.getVideoFilePath(url+""); //读取下载后的本地路径
+                            }catch(e){}
+                            console.log("播放地址" + filePath);
+                            if(filePath!="none"){
+                                is_playing = true;
+                                if (type == "video") {
+                                    $('#my_ad_pic').hide();
+                                    $('#my_video').show();
+                                    $('#my_video').attr("src", filePath);
+                                    $('#my_video').trigger('play');
+
+                                    var tryTime=0;
+                                    videoPlayTimer = setInterval(function () {
+                                        var video = document.getElementById("my_video");
+                                        console.log("当前广告已播放"+video.currentTime+"s"+"合计应播放："+second+"s");
+                                        if (video.currentTime>=second || tryTime>=6){
+                                            clearInterval(videoPlayTimer);
+                                            is_playing = false;
+                                        }
+                                        if (video.currentTime==0){
+                                            tryTime++;
+                                        }
+                                    },1000);
+
+                                } else {
+                                    $('#my_video').trigger('pause');
+                                    $('#my_video').hide();
+                                    $('#my_ad_pic').show();
+                                    $('#my_ad_pic').find('img').attr("src", filePath);
+                                    //等待广告需要播放的时长后恢复可播放状态
+                                    setTimeout(function () {
+                                        is_playing = false;
+                                    }, second * 1000);
+                                }
+                            }else{
+                                console.log("播放广告未下载完成");
+                            }
+                        } catch (e) {
+                        }
+                    }
+                }
+            }
+        }
+    }, 500);
+
+    function myRandom(lowValue, highValue) {
+        var choice = highValue - lowValue + 1;
+        return Math.floor(Math.random() * choice + lowValue);
+    }
+
+    //界面N秒无操作
+    var no_action_time = 0;
+    setInterval(function () {
+        no_action_time++;
+        if (no_action_time >= no_action_time_limit) {
+            $("#player").show();
+            $('#check_temp_box').hide(); //关闭体温测试
+            $('#show_tips').hide(); //关闭提示界面
+            $("#find_goods_box").hide();//关闭查找药品窗口
+            $("#get_prescription_box").hide();//关闭药方窗口
+            showcate();
+        }
+        else if(no_action_time >= no_action_time_index2){
+			back_to_index2();
+        }else if(no_action_time >= 180){
+        	clean_shopping_cart();
+        }
+    }, 1000);
+    
+    function back_to_index2(){
+		clearInterval(timer1);
+		clearInterval(lockTimer);
+    	clearInterval(timer_check_pay);
+    	$("#mall").removeClass("overflow_hidden");
+    	if($("#show_cash_pay").css("display") == "block"){
+    		try{
+    			var return_coin = $(".cash_payed").html()*1;
+    			if(return_coin > 0){
+    				Android.cash_return(Number(return_coin));//通知机器退币	
+    			}
+    		}catch (e){}
+    		$("#show_cash_pay").hide();
+    	}
+    	init_index2();
+        $('#qr_wechat').html("");
+        $('#qr_alipay').html("");
+    	$("#tousu_box").hide();
+    	$("#index2").show();
+    	$('#machine_msg').hide();
+        $('#machine_msg_bg').hide();
+    	$('.btn_back').hide();
+        $('#btn_index2').hide();
+        $("#btn_type").hide();
+    	$("#show_cash_pay").hide();
+    	$('#check_temp_box').hide(); //关闭体温测试
+        $('#show_tips').hide(); //关闭提示界面
+        $("#find_goods_box").hide();//关闭查找药品窗口
+        $("#get_prescription_box").hide();//关闭药方窗口
+        $(".cash_payed").html(0);
+        $(".cash_need_pay").html(0);//需要支付的现金重置为0
+        $(".cash_need_return").html(0);//找零金额重置为0
+//      if(need_notice){
+//      	try{
+//				Android.cash_close();
+//				Android.coin_close();
+//	    	}catch (e){}
+//      }
+    	need_notice = false;//设置为不用再检测现金交易
+    }
+
+    //隐藏广告播放
+    $("#player,#btn_index2,body").on('click', function () {
+    	if($('#show_tips_str').html() == "扫码成功,请付款" && $('#show_tips').css("display") == "block"){
+    		return false;
+    		event.stopPropagation(); 
+    	}
+    	clearInterval(lockTimer);
+    	clearInterval(timer_check_pay);
+    	$("#mall").removeClass("overflow_hidden");
+        $('#my_video').trigger('pause');
+        $('#player').hide();
+        no_action_time = 0;
+        clearInterval(videoPlayTimer); //停止vidoe计时器
+        is_playing = false;
+    });
+    
+    //点击返回首页
+    $("#btn_index2").on("click",function(){
+    	if($('#show_tips_str').html() == "扫码成功,请付款" && $('#show_tips').css("display") == "block"){
+    		return false;
+    		event.stopPropagation(); 
+    	}
+    	back_to_index2();
+    });
+   
+
+    //点击立即购药
+    $("#go_buy,#go_buy2").on('click', function () {
+    	if($('#show_tips_str').html() == "扫码成功,请付款" && $('#show_tips').css("display") == "block"){
+    		return false;
+    		event.stopPropagation(); 
+    	}
+    	back_to_index();
+    });
+    
+    //返回首页
+    function back_to_index(){
+    	clearInterval(lockTimer);
+    	clearInterval(timer_check_pay);
+    	$("#mall").removeClass("overflow_hidden");
+        $('#qr_wechat').html("");
+        $('#qr_alipay').html("");
+    	$("#index2").hide();
+    	$("#shopping_cart_logo").show();
+    	$("#find_goods_box").hide();//关闭查找药品窗口
+    	$("#get_prescription_box").hide();//关闭药方窗口
+    	$("shopping_cart_box").hide();
+    	$("#mall").show();
+        $('.btn_back').hide();
+        $("#btn_type").hide();
+        $('#btn_index2').show();
+    	clearInterval(timer1);
+        now_cate_pid = 0;
+        showcate(true);
+    }
+
+    //点击测试体温
+    $("#check_temp,#check_temp2").on('click', function () {
+    	if($('#show_tips_str').html() == "扫码成功,请付款" && $('#show_tips').css("display") == "block"){
+    		return false;
+    		event.stopPropagation(); 
+    	}
+    	clearInterval(lockTimer);
+    	clearInterval(timer_check_pay);
+    	$("#mall").removeClass("overflow_hidden");
+        $('#qr_wechat').html("");
+        $('#qr_alipay').html("");
+    	$("#shopping_cart_logo").show();
+        $('.btn_back').hide();
+        $("#btn_type").hide();
+        $('#btn_index2').show();
+    	var is_checking = false;
+    	clearInterval(timer1);
+        if ($("#check_temp_box").css("display") == 'none') {
+        	$("#index2").hide();
+    		$("#find_goods_box").hide();//关闭查找药品窗口
+    		$("#get_prescription_box").hide();//关闭药方窗口
+            $('#check_temp_box').show();
+            $('#start_check_temp').off('click').on('click', function () {
+            	if(is_checking){
+            		return;
+            	}
+            	is_checking = true;
+                $('#start_check_temp').html("请准备,5秒后开始");
+                var i = 15;
+                var temp_value = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                var start = 0;
+                var tw_low = 360;
+                var tw_high = 420;
+                var t = setInterval(function () {
+                    i--;
+                    if(i>10){
+                        $('#start_check_temp').html("请准备,"+(i-10)+"秒后开始");
+                    }
+                    if(i == 10){
+//                      Android.play_count_down();
+                    }
+                    if (i <= 10) {
+                        $('#start_check_temp').html("已开始检测，" + i + "秒");
+                        try {
+                            temp_value[start] = Android.get_tiwen()+tiwen_plus*10;
+                        } catch (e) {
+                            temp_value[start] = 0;
+                        }
+                        
+//                      Android.Log(temp_value[start]);
+//                      if(temp_value[start] >= tw_low && temp_value[start]<=tw_high){
+//                  		show_temp_num.animate(temp_value[start]);
+//                  	}else{
+//                  		temp_value[start] = 360 + Math.random()*10;
+//                  		show_temp_num.animate(temp_value[start]);
+//                  	}
+
+                  		show_temp_num.animate(temp_value[start]);
+                        start++;
+                    }
+
+                    if (i <= 0) {
+                        clearInterval(t);
+                        is_checking = false;
+                        $('#start_check_temp').html("点击开始检测");
+                        //去掉最大 最小
+                        var tw_arr = new Array();
+                        var max = 0;
+                        var low = 999;
+                        var max_index = -1;
+                        var low_index = -1;
+                        for (i in temp_value) {
+                        	if(temp_value[i] >= tw_low && temp_value[i]<=tw_high){
+                        		tw_arr.push(temp_value[i]);
+                        	}
+                        }
+                        var total = 0;
+                        var total_index = 0;
+                        for (i in tw_arr) {
+                        	total += tw_arr[i];
+                            total_index ++;
+                        }
+                        Android.Log(tw_arr.toString());
+                        Android.Log(total);
+                        Android.Log(total_index);
+                        var avg = total / total_index;
+                        avg = avg.toFixed(0);
+                        if(total == 0){
+                            avg = 0;
+                        }
+                        show_temp_num.animate(avg);
+                    }
+                }, 1000);
+
+            });
+            try {
+            	clearInterval(lockTimer);
+                clearInterval(timer_check_pay);
+            } catch (e) {
+            }
+            $('#yaopin_box').hide();
+        }
+    });
+
+    //关闭提示
+    $('#show_tips').on('click', function () {
+		if($('#show_tips_str').html() == "扫码成功,请付款"){
+			return false;
+		}else{
+        	$('#show_tips').hide();
+		}
+        clearInterval(timer1);
+    });
+
+
+    //管理员管理
+    var click_times = 0;
+    $('#admin').on('click', function () {
+        click_times++;
+        if (click_times >= 6) {
+            click_times = 0;
+    		$("#find_goods_box").hide();//关闭查找药品窗口
+    		$("#get_prescription_box").hide();//关闭药方窗口
+            $('#admin_login').show();
+            try {
+                Android.show_manager();
+            } catch (e) {
+            }
+        }
+
+    });
+    setInterval(function () {
+        click_times = 0;
+    }, 3000);
+    
+    $('#close_manager').on('click', function () {
+    	$("#shopping_cart_logo").show();
+        $('#manager').hide();
+    });
+
+
+    $('#admin_login_close').on('click', function () {
+        $('#admin_login').hide();
+    });
+    
+    $('.admin_pass_btn').on('click', function () {
+        var num = $(this).data('num');
+        if (num >= 0) {
+            var string = $('#admin_password').val() + "" + num;
+            $('#admin_password').val(string.trim());
+        }
+    });
+    $('#admin_pass_delete').on('click', function () {
+        var now_pass = $('#admin_password').val();
+        now_pass = now_pass.substring(0, now_pass.length - 1);
+        $('#admin_password').val(now_pass);
+    });
+    $('#admin_pass_sure').on('click', function () {
+        var now_pass = $('#admin_password').val();
+        try {
+            $('#set_machine_code').val(Android.get_machine_code());
+        } catch (e) {
+            $('#set_machine_code').val(machine_code);
+        }
+        $('#set_machine_token').val(machine_token);
+        $('#set_machine_num').val(machine_num);
+
+        if (machine_code == "" || machine_code == null || machine_token == "" || machine_token == null || now_pass=="159753") {
+            $('#admin_login').hide();
+            $("#index2").hide();
+            $("#shopping_cart_logo").hide();
+            $('.action_box').show();
+            $('.action_super').hide();
+            $('#action_box').show();
+            $('#manager').show();
+            $('#yaopin_box').hide();
+            $('#check_temp_box').hide(); //隐藏体温界面
+        } else {
+            dmgc_ajax({
+                data: {
+                    api_type: 'api_check_password',
+                    password: now_pass
+                },
+                success: function (rs) {
+                    rs = JSON.parse(rs);
+                    if (rs.state == 1) {
+                        $('#admin_login').hide();
+                        $("#index2").hide();
+                        $('.action_box').show();
+                        $('.action_super').hide();
+                        $('#action_box').show();
+                        $('#manager').show();
+                        $('#yaopin_box').hide();
+                        $('#check_temp_box').hide(); //隐藏体温界面
+                    } else {
+                        $('#show_tips_str').html("密码错误");
+                        $('#show_tips').show();
+                        setTimeout(function () {
+                            $('#show_tips').hide();
+                        }, 2000);
+                    }
+                },
+                complete: function () {
+                    $('#admin_password').val("");
+                }
+            });
+        }
+    });
+
+    //弹出机器修复确认框
+    $('#error_is_ok').on('click', function () {
+        $('#user_config_fixed_box').show();
+    });
+
+    $('#user_config_fixed_sure').on('click', function () {
+        dmgc_ajax({
+            data: {
+                api_type: 'update_fault',
+                deal_result: '现场处理完成'
+            },
+            success: function (rs) {
+                rs = JSON.parse(rs);
+                if (rs.state == 1) {
+                    $('#set_machine_box').hide();
+                    $('#show_tips_str').html("修复成功,即将重启");
+                    $('#show_tips').show();
+                    setTimeout(function () {
+                        $('#show_tips').hide();
+                        try {
+                            Android.app_restart();
+                        } catch (e) {
+                        }
+                    }, 2000);
+                } else {
+                    $('#set_machine_box').hide();
+                    $('#show_tips_str').html("修复失败");
+                    $('#show_tips').show();
+                    setTimeout(function () {
+                        $('#show_tips').hide();
+                    }, 2000);
+                }
+                $('#user_config_fixed_box').hide();
+            }
+        });
+    });
+
+    $('#open_supper').on('click', function () {
+        $('.action_box').hide();
+        $('.action_super').show();
+    });
+
+    $('#restart_app').on('click', function () {
+        try {
+            Android.app_restart();
+        } catch (e) {
+        }
+    });
+    $('#close_app').on('click', function () {
+        try {
+            Android.app_close();
+        } catch (e) {
+        }
+    });
+
+
+    $('#go_back_manager').on('click', function () {
+        $('.action_box').show();
+        $('.action_super').hide();
+    });
+
+
+    //补货&换货
+    $('#user_config_change_goods').on('click', function () {
+        $('#user_config_change_goods_box').show();
+        dmgc_ajax({
+            data: {
+                api_type: 'order_list',
+            },
+            success: function (rs) {
+                rs = JSON.parse(rs);
+                if (rs.state == 1) {
+                    var apply_list = rs.data.apply_list;
+                    if (apply_list.length > 0) {
+                        var _html_goods = '<tr><td>补货编号</td><td>提交时间</td><td>状态</td><td>操作</td></tr>';
+                        for (i in apply_list) {
+                            _html_goods += '<tr>';
+                            _html_goods += '    <td>' + apply_list[i]['apply_id'] + '</td>';
+                            _html_goods += '    <td>' + apply_list[i]['apply_time_str'] + '</td>';
+                            if (apply_list[i]['apply_status'] == 30) {
+                                _html_goods += '    <td>已完成</td>';
+                                _html_goods += '    <td><span class="sure_change" data-type="show" style="padding: 10px 20px;background-color: #0c9c6e;color: #fff;" data-order_id="' + apply_list[i]['apply_id'] + '">查看</span></td>';
+                            } else if (apply_list[i]['apply_status'] == 50) {
+                                _html_goods += '    <td>待处理</td>';
+                                _html_goods += '    <td><span class="sure_change" data-type="action" style="padding: 10px 20px;background-color: #0c9c6e;color: #fff;" data-order_id="' + apply_list[i]['apply_id'] + '">补货换货</span></td>';
+                            }
+                            _html_goods += '</tr>';
+                        }
+                        $('#user_config_change_goods_list').html(_html_goods);
+                        //点击查看补货详情
+                        $('.sure_change').unbind('click').on('click', function () {
+                            $('#user_config_change_goods_sure_box').show();
+                            $('#user_config_change_goods_sure_list').html("");
+                            if ($(this).data('type') == 'show') {
+                                $('#user_config_change_goods_sure_btn').hide();
+                            } else {
+                                $('#user_config_change_goods_sure_btn').show();
+                            }
+
+                            var order_id = $(this).data('order_id');
+                            if (order_id > 0) {
+                                dmgc_ajax({
+                                    data: {
+                                        api_type: 'order_detail',
+                                        apply_id: order_id
+                                    },
+                                    success: function (rs) {
+                                        rs = JSON.parse(rs);
+                                        if (rs.state == 1) {
+                                            var apply_detail = rs.data.detail;
+                                            var _html_goods = '<tr><td>货道</td><td>类型</td><td>原产品</td><td>原数量</td><td>补&换产品</td><td>补&换数量</td></tr>';
+                                            for (i in apply_detail) {
+                                                _html_goods += '<tr>';
+                                                _html_goods += '    <td>' + apply_detail[i]['channel_name'] + '</td>';
+                                                if (apply_detail[i]['detail_apply_type'] == 1) {
+                                                    _html_goods += '    <td>补货</td>';
+                                                } else {
+                                                    _html_goods += '    <td style="color: lightcoral">换货</td>';
+                                                }
+                                                _html_goods += '    <td>' + apply_detail[i]['detail_old_goods_title'] + '</td>';
+                                                _html_goods += '    <td>' + apply_detail[i]['detail_stock'] + '</td>';
+                                                _html_goods += '    <td>' + apply_detail[i]['goods_title'] + '</td>';
+                                                _html_goods += '    <td>' + apply_detail[i]['detail_goods_number'] + '</td>';
+
+                                                _html_goods += '</tr>';
+                                            }
+                                            $('#user_config_change_goods_sure_list').html(_html_goods);
+                                            //关闭补货详情
+                                            $('#user_config_change_goods_sure_close').on('click', function () {
+                                                $('#user_config_change_goods_sure_box').hide();
+                                            });
+                                            //确认补货完成操作
+                                            $('#user_config_change_goods_sure_btn').on('click', function () {
+                                                $('#user_config_change_goods_comfirm_box').show();
+                                            });
+                                            //再次确认补货完成操作
+                                            $('#user_config_change_goods_comfirm_sure').on('click', function () {
+                                                dmgc_ajax({
+                                                    data: {
+                                                        api_type: 'sure_order',
+                                                        apply_id: order_id
+                                                    },
+                                                    success: function (rs) {
+                                                        rs = JSON.parse(rs);
+                                                        if (rs.state == 1) {
+                                                            get_goods(); //立即更新商品列表
+                                                            $('#show_tips_str').html("补货成功");
+                                                            $('#show_tips').show();
+                                                            setTimeout(function () {
+                                                                $('#show_tips').hide();
+                                                            }, 4000);
+                                                        } else {
+
+                                                            $('#show_tips_str').html("补货失败");
+                                                            $('#show_tips').show();
+                                                            setTimeout(function () {
+                                                                $('#show_tips').hide();
+                                                            }, 3000);
+                                                        }
+                                                    },
+                                                    complete: function () {
+                                                        $('#user_config_change_goods_sure_box').hide();
+                                                        $('#user_config_change_goods_comfirm_box').hide();
+                                                        $('#user_config_change_goods_box').hide();
+                                                    }
+                                                });
+
+                                            });
+                                        } else {
+                                            $('#show_tips_str').html("读取失败");
+                                            $('#show_tips').show();
+                                            setTimeout(function () {
+                                                $('#show_tips').hide();
+                                            }, 3000);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                } else {
+                    $('#show_tips_str').html("读取失败");
+                    $('#show_tips').show();
+                    setTimeout(function () {
+                        $('#show_tips').hide();
+                    }, 1000);
+                }
+            }
+        });
+    });
+    
+    //关闭补货换货
+    $('#user_config_change_goods_close').on('click', function () {
+        $('#user_config_change_goods_box').hide();
+    });
+
+    $('#set_token').on('click', function () {
+        $('#set_machine_box').show();
+    });
+    
+    $('#set_machine_ok,#set_machine_cancel').on('click', function () {
+        $('#set_machine_box').hide();
+    });
+    
+    $('#set_machine_ok').on('click', function () {
+        machine_code = $('#set_machine_code').val();
+        machine_token = $('#set_machine_token').val();
+        machine_num = $('#set_machine_num').val();
+        window.localStorage.setItem("machine_code", machine_code);
+        window.localStorage.setItem("machine_token", machine_token);
+        window.localStorage.setItem("machine_num", machine_num);
+        $('#set_machine_box').hide();
+        $('#show_tips_str').show();
+        $('#show_tips_str').html("保存成功");
+        $('#show_tips').show();
+        setTimeout(function () {
+            $('#show_tips').hide();
+        }, 2000);
+    });
+
+    //当前调试的机器编号
+    var test_machine_id = 1;
+    //当前调试的货道编号
+    var test_channel_id = 0;
+    $('#test_channel').on('click', function () {
+        is_debug_channel = true;
+        show_take_godds = 0;
+        $('#show_debug_channel').show();
+        var _html = '';
+        var i_row = 0;
+        for (var i = 0; i <= 99; i++) {
+            if (i < 10) {
+                _html += '<span data-channel_id="' + i + '" class="one_channel_btn">0' + i + '</span>';
+            } else {
+                _html += '<span data-channel_id="' + i + '" class="one_channel_btn">' + i + '</span>';
+            }
+            if (i_row == 9) {
+                _html += '<br>';
+                i_row = 0;
+            } else {
+                i_row++;
+            }
+        }
+        $('#debug_channel_list').html(_html);
+
+        //单货道调试
+        $('.one_channel_btn').off('click').on('click', function () {
+            test_channel_id = $(this).data("channel_id");
+            $('.one_channel_btn').removeClass("one_machine_btn_active");
+            $(this).addClass("one_machine_btn_active");
+            try {
+                Android.machine_good(test_machine_id, test_channel_id);
+            } catch (e) {
+            }
+        });
+    });
+    
+    
+    $('.one_machine_btn').off('click').on('click', function () {
+        test_machine_id = $(this).data("machine_id");
+        $('.one_machine_btn').removeClass("one_machine_btn_active");
+        $(this).addClass("one_machine_btn_active");
+        $('.one_channel_btn').removeClass("one_machine_btn_active");
+        $('.one_channel_btn').css('color','#666');
+    });
+    
+    
+    //全货道调试
+    var isAllCheck = 0;
+    $('#debug_all_channel').off('click').on('click', function () {
+        $('.one_channel_btn').removeClass("one_machine_btn_active");
+        if(isAllCheck==0){
+            isAllCheck = 1;
+            $('.one_channel_btn').css('color','#666');
+            $('#debug_all_channel').html("停止检测");
+            try {
+                Android.test_all_channel(test_machine_id); //全货道检测
+            } catch (e) {
+            }
+        }else{
+            isAllCheck = 0;
+            $('#debug_all_channel').html("全货道检测");
+            try {
+                Android.stopAllCheck(); //停止全货道检测
+            } catch (e) {
+            }
+        }
+
+    });
+    
+    //打开简介设置
+    $('#introduction').on('click',function () {
+        $('#introduction_plus').val(introduction_plus);
+        $('#introduction_box').show();
+    });
+    
+    //简介确认设置
+    $('#introduction_ok').on('click',function () {
+        introduction_plus = $('#introduction_plus').val();
+        console.log(introduction_plus);
+        $("#index2_tips_area").html(introduction_plus);
+        window.localStorage.setItem("introduction_plus",introduction_plus);
+        $('#introduction_box').hide();
+    });
+    
+    //打开自动出货设置
+    $('#shipment').on('click',function () {
+        $('#shipment_plus').val(shipment_plus);
+        $('#shipment_box').show();
+    });
+    
+    //体温补偿确认设置
+    $('#shipment_ok').on('click',function () {
+        shipment_plus = $('#shipment_plus').val();
+        window.localStorage.setItem("shipment_plus",shipment_plus);
+        $('#shipment_box').hide();
+    });
+    
+    //打开体温补偿设置
+    $('#set_tiwen').on('click',function () {
+        $('#set_tiwen_plus').val(tiwen_plus);
+        $('#set_tiwen_box').show();
+    });
+
+    //体温补偿确认设置
+    $('#set_tiwen_ok').on('click',function () {
+        tiwen_plus = $('#set_tiwen_plus').val();
+        window.localStorage.setItem("tiwen_plus",tiwen_plus);
+        $('#set_tiwen_box').hide();
+    });
+
+    //点击药品查询
+    $('#btn_yaopin,#btn_yaopin2').on('click',function () {
+    	if($('#show_tips_str').html() == "扫码成功,请付款" && $('#show_tips').css("display") == "block"){
+    		return false;
+    		event.stopPropagation(); 
+    	}
+    	clearInterval(lockTimer);
+    	clearInterval(timer_check_pay);
+    	$("#mall").removeClass("overflow_hidden");
+    	$("#shopping_cart_logo").show();
+        $('#qr_wechat').html("");
+        $('#qr_alipay').html("");
+        $('.btn_back').hide();
+        $("#btn_type").hide();
+        $("#finding_type_box").show();
+        $('#btn_index2').show();
+    	clearInterval(timer1);
+    	$("#find_more_yaopin").hide();
+    	$("#no_more_yaopin").hide();
+    	$("#index2").hide();
+    	$("#find_goods_box").hide();//关闭查找药品窗口
+    	$("#get_prescription_box").hide();//关闭药方窗口
+        $('#yaopin_box').show();
+        $('#check_temp_box').hide();
+        $('#yaopin_list_table').html('');
+        $('#yaopin_title').val('');
+    });
+    
+    $("#btn_type,#btn_type1").on("click",function(){
+    	$("#tousu_box").hide();
+    	$("#btn_type").hide();
+    	$('#yaopin_list_table').html("");
+		$('#btn_index2').show();
+    	$("#finding_type_box").show();
+    });
+    
+    //点击查询分类
+    $(".finding_type").on("click",function(){
+		var type_name = $(this).data('val');
+		$("#yaopin_type").val(type_name);
+		$("#finding_type_box").hide();
+    	$("#find_more_yaopin").hide();
+    	$("#no_more_yaopin").hide();
+    	$("#index2").hide();
+    	$("#find_goods_box").hide();//关闭查找药品窗口
+    	$("#get_prescription_box").hide();//关闭药方窗口
+        $('#check_temp_box').hide();
+        $('#yaopin_list_table').html('');
+        $('#yaopin_title').val('');
+		$('#btn_index2').hide();
+		$("#btn_type").show();
+		if(type_name == "tousu"){
+			$('#tousu_box').show();
+		}else{
+			$('#yaopin_box').show();
+			if($("#yaopin_type").val() == "wzlb"){
+	    		$('#yaopin_start').click();
+	    	}
+		}
+	});
+    
+    //文章内容自动查询
+    $("#yaopin_type").on("change",function(){
+    	if($("#yaopin_type").val() == "wzlb"){
+    		$('#yaopin_start').click();
+    	}
+    })
+    
+    //点击药品查询->开始查询
+    $('#yaopin_start').on('click',function () {
+    	var yaopin_type = $("#yaopin_type").val();
+        $('#yaopin_list_table').html('<div style="text-align: center">查询中,请稍后...</div>');
+        if(yaopin_type == "wzlb"){
+        	var title = "文章";
+        }else{
+        	var title = $('#yaopin_title').val();
+        }
+        var page = 1;
+        $("#find_more_yaopin").data("page",1);
+        if(title.length>0){
+            dmgc_ajax({
+                data:{
+                    api_type: 'yaopin',
+                    type: yaopin_type,
+                    mc: title,
+                    page:1
+                },
+                success: function (backdata) {
+                    backdata = JSON.parse(backdata);
+                    console.log(backdata);
+                    if (backdata.StatusCode == 200) {
+                        var data_list = backdata.Data;
+                        if(yaopin_type != "wzlb"){
+                        	data_list = JSON.parse(data_list);
+                        }
+                        if(data_list.length>0){
+                            var _html_list = '';
+                            for(i in data_list){
+                            	if(yaopin_type == "wzlb"){
+                                	_html_list += '<tr>' +
+                                    '   <td style="width: 80%;color: #333">'+data_list[i]['Title']+'</td>' +
+                                    '   <td style="text-align: center">' +
+                                    '       <div class="yaopin_info_btn" data-id="'+data_list[i]['id']+'" style="padding: 0px 20px;">查看详情</div>' +
+                                    '   </td>' +
+                                    '</tr>';
+						        }else{
+	                                _html_list += '<tr>' +
+                                    '   <td style="width: 80%;color: #333">'+data_list[i]['CONTENT']+'</td>' +
+                                    '   <td style="text-align: center">' +
+                                    '       <div class="yaopin_info_btn" data-id="'+data_list[i]['ID']+'" style="padding: 0px 20px;">查看详情</div>' +
+                                    '   </td>' +
+                                    '</tr>';
+						        }
+                            }
+                            $('#yaopin_list_table').html("");
+                            $('#yaopin_list_table').append(_html_list);
+                            //初始化按钮
+							init_yaopin_btn();
+							if(data_list.length == 20){
+	                        	$("#find_more_yaopin").show();
+	                        }
+                        }else{
+                            $('#yaopin_list_table').html('<div style="text-align: center">没有对应数据</div>');
+                        }
+
+                    }
+                }
+            });
+        }
+    });
+    
+    //点击查看更多
+    $("#find_more_yaopin").on("click",function(){
+    	var yaopin_type = $("#yaopin_type").val();
+        if(yaopin_type == "wzlb"){
+        	var title = "文章";
+        }else{
+        	var title = $('#yaopin_title').val();
+        }
+    	var page = Number($(this).data("page")) + 1;
+    	if(title.length>0){
+            dmgc_ajax({
+                data:{
+                    api_type: 'yaopin',
+                    type: yaopin_type,
+                    mc: title,
+                    page:page
+                },
+                success:function(backdata){
+                	backdata = JSON.parse(backdata);
+                    if (backdata.StatusCode == 200) {
+                        var data_list = backdata.Data;
+                        if(yaopin_type != "wzlb"){
+                        	data_list = JSON.parse(data_list);
+                        }
+                        if(data_list.length>0){
+                            console.log(data_list);
+                            var _html_list = '';
+                            for(i in data_list){
+                                if(yaopin_type == "wzlb"){
+                                	_html_list += '<tr>' +
+                                    '   <td style="width: 80%;color: #333">'+data_list[i]['Title']+'</td>' +
+                                    '   <td style="text-align: center">' +
+                                    '       <div class="yaopin_info_btn" data-id="'+data_list[i]['id']+'" style="padding: 0px 20px;">查看详情</div>' +
+                                    '   </td>' +
+                                    '</tr>';
+						        }else{
+	                                _html_list += '<tr>' +
+                                    '   <td style="width: 80%;color: #333">'+data_list[i]['CONTENT']+'</td>' +
+                                    '   <td style="text-align: center">' +
+                                    '       <div class="yaopin_info_btn" data-id="'+data_list[i]['ID']+'" style="padding: 0px 20px;">查看详情</div>' +
+                                    '   </td>' +
+                                    '</tr>';
+						        }
+                            }
+                            $('#yaopin_list_table').append(_html_list);
+                        }
+                        //初始化按钮
+						init_yaopin_btn();
+                        if(data_list.length == 20){
+                        	$("#find_more_yaopin").show();
+                        	$("#find_more_yaopin").data("page",page);
+                        }else{
+                        	$("#find_more_yaopin").hide();
+                        	$("#no_more_yaopin").show();
+                        }
+                    }
+                }
+            });
+        }
+    });
+    
+    //药品查看详情按钮初始化
+    function init_yaopin_btn(){
+    	$('.yaopin_info_btn').off('click').on('click',function () {
+    		var yaopin_type = $("#yaopin_type").val();
+    		$("#find_more_yaopin").hide();
+			$("#no_more_yaopin").hide();
+            $('#yaopin_list_table').html('<div style="text-align: center">查询中,请稍后...</div>');
+            var id = $(this).data('id');
+            dmgc_ajax({
+                data: {
+                    api_type: 'yaopin_info',
+                    type: yaopin_type,
+                    id: id,
+                },
+                success: function (backdata_info) {
+                    backdata_info = JSON.parse(backdata_info);
+                    if (backdata_info.StatusCode == 200) {
+                        var data_info = backdata_info.Data;
+                        if(yaopin_type != "wzlb"){
+                        	data_info = JSON.parse(data_info);
+                        }
+                        var _html_info = '';
+                        if(data_info.length>0){
+                            for (i in data_info) {
+                            	var Contents = data_info[i].CONTENT;
+	                        	Contents = Contents.replace(new RegExp("<a","g"),"<sapn");
+                        		Contents = Contents.replace(new RegExp("</a>","g"),"</span>");
+                                _html_info += '<tr>' +
+                                        '   <td style="width: 30%;color: #333;text-align: center">' + data_info[i].NAME + '</td>' +
+                                        '   <td style="width: 70%;color: #333;text-align: center">' + Contents + '</td>' +
+                                        '</tr>';
+                            }
+                            $('#yaopin_list_table').html(_html_info);
+                        }else{
+                        	var Contents = decodeURIComponent(decodeURIComponent(data_info.Contents).replace(/\+/g, '%20'));
+                        	Contents = Contents.replace(new RegExp("/UploadFiles","g"),"http://www.mygfda.gov.cn/UploadFiles");
+                        	Contents = Contents.replace(new RegExp("<a","g"),"<sapn");
+                        	Contents = Contents.replace(new RegExp("</a>","g"),"</span>");
+                        	if(yaopin_type == "wzlb"){
+                        		_html_info += '<tr><td style="width: 100%;color: #333;text-align: center">' + data_info.Title + '</td></tr>'+
+                            	'<tr><td style="width: 100%;color: #333;text-align: center">' + data_info.ReleaseDate + '</td></tr>'+
+                            	'<tr><td style="width: 100%;color: #333;line-height:38px;text-indent:2em">' + Contents + '</td></tr>';
+                            	$('#yaopin_list_table').html(_html_info);
+                        	}else{
+                        		$('#yaopin_list_table').html('<div style="text-align: center">该商品没有详细信息</div>');
+                        	}
+                        }
+
+                    }else{
+                        $('#yaopin_list_table').html('<div style="text-align: center">信息读取出错</div>');
+                    }
+                }
+            });
+        });
+    }
+
+    $('#open_app,#open_app2').on('click',function(){
+    	if($('#show_tips_str').html() == "扫码成功,请付款" && $('#show_tips').css("display") == "block"){
+    		return false;
+    		event.stopPropagation(); 
+    	}
+    	clearInterval(lockTimer);
+    	clearInterval(timer_check_pay);
+        Android.open_live_app();
+    });
+
+    //基础请求函数
+    function dmgc_ajax(obj) {
+        if (machine_token != "" && machine_code != "") {
+            obj.data.machine_code = machine_code;
+            obj.data.token = machine_token;
+            $.ajax({
+                type: obj.type ? obj.type : 'POST',
+                url: API_URL,
+                data: obj.data,
+                timeout: obj.timeout ? obj.timeout : '15000',
+                success: obj.success,
+                error: obj.error,
+                complete: function () {
+                    try {
+                        obj.complete()
+                    } catch (e) {
+                    }
+                }
+            });
+        }
+    }
+
+</script>
+</body>
+</html>
