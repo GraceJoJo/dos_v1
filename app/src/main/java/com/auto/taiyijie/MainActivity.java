@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         // 隐藏底部操作栏
         closeBar();
-//        restartAndroid(4,0);
+        restartAndroid(4,0);
         setContentView(R.layout.webview);
         initWeb();
         String defaultPath = getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).getPath();
